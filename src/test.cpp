@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <camera.h>
 #include <shader.h>
 #include <transform.h>
 
@@ -68,6 +69,12 @@ class Renderer {
 
 int main() {
     Renderer renderer(800, 800, "Test");
+
+    Camera camera(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+                  glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(45.0f),
+                  (float)renderer.window_width / (float)renderer.window_height,
+                  1.0f, 30.0f);
+
     renderer.init();
     Shader shader("vertex.shader", "fragment.shader");
 
@@ -176,13 +183,23 @@ int main() {
         shader.use();
         for (int i = 0; i < 9; i++) {
             glm::vec3 cur = cubePositions[i];
-            test.set_rotation(glm::vec3(glm::radians(sin_pos * 5.0f * 180.0f),
-                                        glm::radians(cos_pos * 5.0f * 180.0f),
-                                        0.0f));
+            test.set_rotation(
+                glm::vec3(glm::radians(sin_pos * 5.0f * 180.0f), 0.0f, 0.0f));
             test.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
             test.set_position(glm::vec3(cur.x, cur.y, cur.z + 0.0f));
+
+            const float radius = 5 + sin_pos * 10;
+            float camX = sin(glfwGetTime()) * radius;
+            float camZ = cos(glfwGetTime()) * radius;
+
+            camera.set_pos(glm::vec3(camX, 0.0, camZ));
             glm::mat4 model = test.get_model_matrix();
-            shader.set_mat4f("transform", model);
+            glm::mat4 view = camera.get_view_matrix();
+            glm::mat4 projection = camera.get_projection_matrix();
+
+            shader.set_mat4f("model", model);
+            shader.set_mat4f("view", view);
+            shader.set_mat4f("projection", projection);
 
             // shader.set_vec3f("test", cos_pos, sin_pos, 0.0f);
             glBindVertexArray(VAO);
