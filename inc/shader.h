@@ -5,11 +5,13 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <cstdio>
+#include <string>
 
 struct Shader {
     GLuint m_program;
-    Shader(const char* vertex_source, const char* fragment_source);
+    Shader(const char* vertex_path, const char* fragment_path);
 
+    std::string read_shader(const char* path);
     GLuint compile_shader(const char* source, int shader_type);
     GLuint create_program(GLuint vs, GLuint fs);
 

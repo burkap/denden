@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <shader.h>
 #include <transform.h>
 
 #include <cmath>
@@ -9,7 +10,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
 #include <iostream>
-#include <shader.h>
 
 class Renderer {
    public:
@@ -65,38 +65,11 @@ class Renderer {
     void run() {}
 };
 
-// TO-DO: Read sources from files.
-const char* vertex_source = R"glsl(
-#version 330 core
-layout (location = 0) in vec3 pos;
-layout (location = 1) in vec3 color;
-
-out vec4 ourColor;
-
-uniform mat4 transform;
-void main()
-{
-    gl_Position = transform * vec4(pos.x, pos.y, pos.z, 1.0);
-    ourColor = vec4(color, 1.0f);
-}
-)glsl";
-
-const char* fragment_source = R"glsl(
-#version 330 core
-
-out vec4 FragColor;
-in vec4 ourColor;
-
-void main()
-{
-    FragColor = ourColor;
-}
-)glsl";
 
 int main() {
     Renderer renderer(800, 800, "Test");
     renderer.init();
-    Shader shader(vertex_source, fragment_source);
+    Shader shader("vertex.shader", "fragment.shader");
 
     // Drawing a triangle
     // float vertices[] = {
