@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <camera.h>
 #include <shader.h>
+#include <stddef.h> /* offsetof */
 #include <transform.h>
 
 #include <cmath>
@@ -11,6 +12,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
 #include <iostream>
+#include <vector>
+
+struct Vertex {
+    glm::vec3 pos;
+    glm::vec3 color;
+    Vertex(glm::vec3 p, glm::vec3 c) : pos(p), color(c) {}
+};
 
 class Renderer {
    public:
@@ -66,7 +74,6 @@ class Renderer {
     void run() {}
 };
 
-
 int main() {
     Renderer renderer(800, 800, "Test");
 
@@ -78,61 +85,15 @@ int main() {
     renderer.init();
     Shader shader("vertex.shader", "fragment.shader");
 
-    // Drawing a triangle
-    // float vertices[] = {
-    // // first triangle
-    //  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // top right
-    //  0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,// bottom right
-    // -0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,// top left
-    // // second triangle
-    //  0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-    // -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, // bottom left
-    // -0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f // top left
+    std::vector<Vertex> vertices = {
+        Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
+        Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f)),
+        Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
 
-    // };
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,  //
-        0.5f,  -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,  //
-        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 1.0f,  //
-        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 1.0f,  //
-        -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f, 1.0f,  //
-        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,  //
+        Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f)),
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
+        Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))};
 
-        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  //
-        0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  //
-        0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  //
-        0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  //
-        -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  //
-        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  //
-
-        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  //
-        -0.5f, 0.5f,  -0.5f, 1.0f, 0.0f, 0.0f,  //
-        -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  //
-        -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  //
-        -0.5f, -0.5f, 0.5f,  1.0f, 0.0f, 0.0f,  //
-        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  //
-
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  //
-        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.0f,  //
-        0.5f,  -0.5f, -0.5f, 1.0f, 1.0f, 0.0f,  //
-        0.5f,  -0.5f, -0.5f, 1.0f, 1.0f, 0.0f,  //
-        0.5f,  -0.5f, 0.5f,  1.0f, 1.0f, 0.0f,  //
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  //
-
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //
-        0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //
-        0.5f,  -0.5f, 0.5f,  0.0f, 1.0f, 1.0f,  //
-        0.5f,  -0.5f, 0.5f,  0.0f, 1.0f, 1.0f,  //
-        -0.5f, -0.5f, 0.5f,  0.0f, 1.0f, 1.0f,  //
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f,  //
-
-        -0.5f, 0.5f,  -0.5f, 1.0f, 0.0f, 1.0f,  //
-        0.5f,  0.5f,  -0.5f, 1.0f, 0.0f, 1.0f,  //
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  //
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  //
-        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  //
-        -0.5f, 0.5f,  -0.5f, 1.0f, 0.0f, 1.0f   //
-    };
     Transform test(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
                    glm::vec3(1.0, 1.0, 1.0));
     unsigned int VBO;
@@ -144,9 +105,8 @@ int main() {
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // glVertexAttribPointer();
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
+                 &vertices[0], GL_STATIC_DRAW);
     // parameters respectively:
     // --------------
     // index (location in shader)
@@ -157,13 +117,13 @@ int main() {
     // offset (inside the boundaries of the vertex)
     // ---------------------
     // position (x, y, z) location = 0
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
-                          (void*)0);
-    glEnableVertexAttribArray(1);
-    // color (r, g, b) location = 1
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
-                          (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void*)offsetof(struct Vertex, pos));
     glEnableVertexAttribArray(0);
+    // // color (r, g, b) location = 1
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void*)offsetof(struct Vertex, color));
+    glEnableVertexAttribArray(1);
 
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f, 0.0f, 0.0f),   glm::vec3(0.0f, 0.0f, 1.5f),
@@ -183,8 +143,7 @@ int main() {
         shader.use();
         for (int i = 0; i < 9; i++) {
             glm::vec3 cur = cubePositions[i];
-            test.set_rotation(
-                glm::vec3(glm::radians(sin_pos * 5.0f * 180.0f), 0.0f, 0.0f));
+            test.set_rotation(glm::vec3(glm::radians(60.0f), 0.0f, 0.0f));
             test.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
             test.set_position(glm::vec3(cur.x, cur.y, cur.z + 0.0f));
 
