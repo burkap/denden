@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <camera.h>
+#include <model.h>
 #include <shader.h>
 #include <stddef.h> /* offsetof */
 #include <transform.h>
@@ -13,12 +14,6 @@
 #include <glm/mat4x4.hpp>
 #include <iostream>
 #include <vector>
-
-struct Vertex {
-    glm::vec3 pos;
-    glm::vec3 color;
-    Vertex(glm::vec3 p, glm::vec3 c) : pos(p), color(c) {}
-};
 
 class Renderer {
    public:
@@ -85,86 +80,133 @@ int main() {
     renderer.init();
     Shader shader("vertex.shader", "fragment.shader");
 
-    std::vector<Vertex> vertices = {
-        Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
-        Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f)),
-        Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+    // std::vector<Vertex> vertices = {
+    //     Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
+    //     Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f)),
+    //     Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
 
-        Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f)),
-        Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
-        Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))};
+    //     Vertex(glm::vec3(1.f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
+    //     Vertex(glm::vec3(0.5f, -1.f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f)),
+    //     Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+
+    //     Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 0.0f)),
+    //     Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
+    //     Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))};
+
+
+
+     std::vector<Vertex> vertices = {
+        Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, 0.5f,  -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
+
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  -0.5f, 0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, 0.5f,  0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
+
+        Vertex(glm::vec3(-0.5f, 0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 0.0f)),  //
+        Vertex(glm::vec3(-0.5f, 0.5f,  -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(1.0f, 0.0f, 0.0f)),  //
+        Vertex(glm::vec3(-0.5f, 0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 0.0f)),  //
+        
+        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(1.0f, 1.0f, 0.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),  //
+        Vertex(glm::vec3(0.5f,  -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),  //
+        Vertex(glm::vec3(0.5f,  -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),  //
+        Vertex(glm::vec3(0.5f,  -0.5f, 0.5f),  glm::vec3(1.0f, 1.0f, 0.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(1.0f, 1.0f, 0.0f)),  //
+
+        Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  -0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  -0.5f, 0.5f),  glm::vec3(0.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  -0.5f, 0.5f),  glm::vec3(0.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(0.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),  //
+        
+        Vertex(glm::vec3(-0.5f, 0.5f,  -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, 0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, 0.5f,  -0.5f), glm::vec3(1.0f, 0.0f, 1.0f))   //
+    };
+    Mesh the_mesh(vertices);
+    Model the_model;
+
+    Model moon;
+    std::vector<Mesh> meshes;
+    meshes.push_back(the_mesh);
+
+    the_model.set_meshes(meshes);
+    moon.set_meshes(meshes);
 
     Transform test(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
                    glm::vec3(1.0, 1.0, 1.0));
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
-                 &vertices[0], GL_STATIC_DRAW);
-    // parameters respectively:
-    // --------------
-    // index (location in shader)
-    // array length
-    // array type
-    // normalize?
-    // size (in bytes) of each vertex
-    // offset (inside the boundaries of the vertex)
-    // ---------------------
-    // position (x, y, z) location = 0
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void*)offsetof(struct Vertex, pos));
-    glEnableVertexAttribArray(0);
-    // // color (r, g, b) location = 1
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void*)offsetof(struct Vertex, color));
-    glEnableVertexAttribArray(1);
 
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f, 0.0f, 0.0f),   glm::vec3(0.0f, 0.0f, 1.5f),
-        glm::vec3(0.0f, 0.0f, -1.5f),  glm::vec3(1.5f, 0.0f, 0.0f),
-        glm::vec3(1.5f, 0.0f, 1.5f),   glm::vec3(1.5f, 0.0f, -1.5f),
+        glm::vec3(0.0f, 0.0f, -1.5f),  glm::vec3(1.5f, 3.f, 0.0f),
+        glm::vec3(1.5f, 0.0f, 1.5f),   glm::vec3(1.5f, 5.f, -1.5f),
         glm::vec3(-1.5f, 0.0f, 0.0f),  glm::vec3(-1.5f, 0.0f, 1.5f),
         glm::vec3(-1.5f, 0.0f, -1.5f),
     };
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
+    Transform moon_t(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
+                   glm::vec3(1.0, 1.0, 1.0));
 
     while (!glfwWindowShouldClose(renderer.window)) {
+        
         // Fill background
         renderer.fill(0.3f, 0.3f, 0.2f);
         float tv = glfwGetTime();
         float sin_pos = sin(tv) / 5.0f;
         float cos_pos = cos(tv) / 5.0f;
         shader.use();
-        for (int i = 0; i < 9; i++) {
-            glm::vec3 cur = cubePositions[i];
-            test.set_rotation(glm::vec3(glm::radians(60.0f), 0.0f, 0.0f));
-            test.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
-            test.set_position(glm::vec3(cur.x, cur.y, cur.z + 0.0f));
+        
+    
+        glm::vec3 cur = cubePositions[0];
+        test.set_rotation(glm::vec3(glm::radians(0.0f), 0.0f, 0.0f));
+        test.set_scale(glm::vec3(0.5f, 0.5f, 0.5f));
+        test.set_position(glm::vec3(cur.x, cur.y, cur.z + 0.0f));
 
-            const float radius = 5 + sin_pos * 10;
-            float camX = sin(glfwGetTime()) * radius;
-            float camZ = cos(glfwGetTime()) * radius;
+        const float radius = 3;
+        float camX = sin(glfwGetTime()) * radius;
+        float camZ = cos(glfwGetTime()) * radius;
 
-            camera.set_pos(glm::vec3(camX, 0.0, camZ));
-            glm::mat4 model = test.get_model_matrix();
-            glm::mat4 view = camera.get_view_matrix();
-            glm::mat4 projection = camera.get_projection_matrix();
+        camera.set_pos(glm::vec3(0, 1, 5));
+        glm::mat4 model = test.get_model_matrix();
+        glm::mat4 view = camera.get_view_matrix();
+        glm::mat4 projection = camera.get_projection_matrix();
 
-            shader.set_mat4f("model", model);
-            shader.set_mat4f("view", view);
-            shader.set_mat4f("projection", projection);
+        shader.set_mat4f("model", model);
+        shader.set_mat4f("view", view);
+        shader.set_mat4f("projection", projection);
 
-            // shader.set_vec3f("test", cos_pos, sin_pos, 0.0f);
-            glBindVertexArray(VAO);
+        // shader.set_vec3f("test", cos_pos, sin_pos, 0.0f);
+        the_model.draw();
+        
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
+        moon_t.set_position(glm::vec3(camX, 0.0f, camZ));
+        moon_t.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
+        moon_t.set_rotation(glm::vec3(glm::radians(180.0f), glm::radians(0.0), 0.0f));
+
+        model = moon_t.get_model_matrix();
+
+        shader.set_mat4f("model", model);
+        shader.set_mat4f("view", view);
+        shader.set_mat4f("projection", projection);
+
+        moon.draw();
+        
 
         renderer.render();
     }
