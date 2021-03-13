@@ -1,17 +1,18 @@
+#include <libgen.h>
 #include <shader.h>
+#include <util.h>
 
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 #include <sstream>
 #include <string>
-#include <iostream>
-#include <libgen.h>
-#include <util.h>
 
 Shader::Shader(const char* vertex_path, const char* fragment_path) {
     std::string vertex_source = read_shader(vertex_path);
     std::string fragment_source = read_shader(fragment_path);
-    GLuint vertex_shader = compile_shader(vertex_source.c_str(), GL_VERTEX_SHADER);
+    GLuint vertex_shader =
+        compile_shader(vertex_source.c_str(), GL_VERTEX_SHADER);
     GLuint fragment_shader =
         compile_shader(fragment_source.c_str(), GL_FRAGMENT_SHADER);
     m_program = create_program(vertex_shader, fragment_shader);

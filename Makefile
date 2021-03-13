@@ -16,7 +16,7 @@ OBJEXT      := o
 
 #Flags, Libraries and Includes
 CFLAGS      := -Wall -g
-LIB         := -lGL -lglfw -lGLEW
+LIB         := -lGL -lglfw -lGLEW -lassimp
 INC         := -I$(INCDIR)
 INCDEP      := -I$(INCDIR)
 

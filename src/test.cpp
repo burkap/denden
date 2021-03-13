@@ -6,6 +6,7 @@
 #include <shader.h>
 #include <stddef.h> /* offsetof */
 #include <transform.h>
+#include <util.h>
 
 #include <cmath>
 #include <cstdio>
@@ -139,6 +140,10 @@ int main() {
     Mesh the_mesh(vertices);
     Model the_model;
 
+    Model test_model;
+
+    test_model.load_model(get_exe_path() + std::string("/test/utah.obj"));
+    
     Model moon;
     std::vector<Mesh> meshes;
     meshes.push_back(the_mesh);
@@ -206,23 +211,24 @@ int main() {
         shader.set_mat4f("projection", projection);
 
         // shader.set_vec3f("test", cos_pos, sin_pos, 0.0f);
-        the_model.draw();
+        //the_model.draw();
 
         const float radius = 3;
         float camX = sin(glfwGetTime()) * radius;
         float camZ = cos(glfwGetTime()) * radius;
 
-        moon_t.set_position(glm::vec3(camX, 0.0f, camZ));
+        //moon_t.set_position(glm::vec3(camX, 0.0f, camZ));
         moon_t.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
         moon_t.set_rotation(
-            glm::vec3(glm::radians(180.0f), glm::radians(0.0), 0.0f));
+            glm::vec3(glm::radians(0.0), glm::radians(sin_pos*5*180.0f), 0.0f));
 
         model = moon_t.get_model_matrix();
 
-        shader.set_mat4f("model", model);   
+        shader.set_mat4f("model", model);
 
-        moon.draw();
+        // moon.draw();
 
+        test_model.draw();
         renderer.render();
     }
 
