@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <camera.h>
+#include <gameobject.h>
 #include <model.h>
 #include <shader.h>
 #include <stddef.h> /* offsetof */
@@ -81,15 +82,13 @@ int main() {
     renderer.init();
     Shader shader("vertex.shader", "fragment.shader");
 
-    Model test_model;
+    Model teapot_model;
+    teapot_model.load_model(get_exe_path() + std::string("/test/utah.obj"));
 
-    test_model.load_model(get_exe_path() + std::string("/test/utah.obj"));
-    
+    Transform teapot_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
+                               glm::vec3(1.0, 1.0, 1.0));
 
-
-    Transform test(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
-                   glm::vec3(1.0, 1.0, 1.0));
-
+    GameObject teapot_object(teapot_transform, teapot_model);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     float deltaTime = 0.0f;
@@ -123,12 +122,12 @@ int main() {
         float sin_pos = sin(tv);
         shader.use();
 
-        test.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
-        test.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
-        test.set_rotation(
-            glm::vec3(glm::radians(0.0), glm::radians(sin_pos*180.0f), 0.0f));
+        teapot_object.transform.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
+        teapot_object.transform.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
+        teapot_object.transform.set_rotation(
+            glm::vec3(glm::radians(0.0), glm::radians(sin_pos * 180.0f), 0.0f));
 
-        glm::mat4 model = test.get_model_matrix();
+        glm::mat4 model = teapot_object.transform.get_model_matrix();
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
 
@@ -136,7 +135,7 @@ int main() {
         shader.set_mat4f("view", view);
         shader.set_mat4f("projection", projection);
 
-        test_model.draw();
+        teapot_object.draw();
         renderer.render();
     }
 
