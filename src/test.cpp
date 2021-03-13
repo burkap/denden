@@ -72,7 +72,7 @@ class Renderer {
 int main() {
     Renderer renderer(800, 800, "Test");
 
-    Camera camera(glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+    Camera camera(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, -1.0f),
                   glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(45.0f),
                   (float)renderer.window_width / (float)renderer.window_height,
                   1.0f, 30.0f);
@@ -93,50 +93,48 @@ int main() {
     //     Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
     //     Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))};
 
-
-
-     std::vector<Vertex> vertices = {
+    std::vector<Vertex> vertices = {
         Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
-        Vertex(glm::vec3(-0.5f, 0.5f,  -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),   //
+        Vertex(glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),    //
+        Vertex(glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),    //
+        Vertex(glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),   //
         Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)),  //
 
-        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  -0.5f, 0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(-0.5f, 0.5f,  0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(0.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f)),   //
+        Vertex(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f)),    //
+        Vertex(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f)),    //
+        Vertex(glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f)),   //
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f)),  //
 
-        Vertex(glm::vec3(-0.5f, 0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 0.0f)),  //
-        Vertex(glm::vec3(-0.5f, 0.5f,  -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),  //
+        Vertex(glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),    //
+        Vertex(glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),   //
         Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),  //
         Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),  //
-        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(1.0f, 0.0f, 0.0f)),  //
-        Vertex(glm::vec3(-0.5f, 0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 0.0f)),  //
-        
-        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(1.0f, 1.0f, 0.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),  //
-        Vertex(glm::vec3(0.5f,  -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),  //
-        Vertex(glm::vec3(0.5f,  -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),  //
-        Vertex(glm::vec3(0.5f,  -0.5f, 0.5f),  glm::vec3(1.0f, 1.0f, 0.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(1.0f, 1.0f, 0.0f)),  //
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),   //
+        Vertex(glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f)),    //
+
+        Vertex(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),    //
+        Vertex(glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),   //
+        Vertex(glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),  //
+        Vertex(glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),  //
+        Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),   //
+        Vertex(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 0.0f)),    //
 
         Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  -0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  -0.5f, 0.5f),  glm::vec3(0.0f, 1.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  -0.5f, 0.5f),  glm::vec3(0.0f, 1.0f, 1.0f)),  //
-        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f),  glm::vec3(0.0f, 1.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),   //
+        Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),    //
+        Vertex(glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),    //
+        Vertex(glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),   //
         Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)),  //
-        
-        Vertex(glm::vec3(-0.5f, 0.5f,  -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(0.5f,  0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(-0.5f, 0.5f,  0.5f),  glm::vec3(1.0f, 0.0f, 1.0f)),  //
-        Vertex(glm::vec3(-0.5f, 0.5f,  -0.5f), glm::vec3(1.0f, 0.0f, 1.0f))   //
+
+        Vertex(glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),  //
+        Vertex(glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),   //
+        Vertex(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),    //
+        Vertex(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),    //
+        Vertex(glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 1.0f)),   //
+        Vertex(glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f))   //
     };
     Mesh the_mesh(vertices);
     Model the_model;
@@ -159,30 +157,46 @@ int main() {
         glm::vec3(-1.5f, 0.0f, -1.5f),
     };
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
+
     Transform moon_t(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
-                   glm::vec3(1.0, 1.0, 1.0));
+                     glm::vec3(1.0, 1.0, 1.0));
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(renderer.window)) {
-        
+        {
+            float currentFrame = glfwGetTime();
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+            if (glfwGetKey(renderer.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+                glfwSetWindowShouldClose(renderer.window, true);
+
+            if (glfwGetKey(renderer.window, GLFW_KEY_W) == GLFW_PRESS)
+                camera.set_pos(camera.get_pos() +
+                               glm::vec3(0.0, 0.0, -1.f * deltaTime * 2));
+            if (glfwGetKey(renderer.window, GLFW_KEY_S) == GLFW_PRESS)
+                camera.set_pos(camera.get_pos() +
+                               glm::vec3(0.0, 0.0, 1.f * deltaTime * 2));
+            if (glfwGetKey(renderer.window, GLFW_KEY_D) == GLFW_PRESS)
+                camera.set_pos(camera.get_pos() +
+                               glm::vec3(1.f * deltaTime * 2, 0.0, 0.0));
+            if (glfwGetKey(renderer.window, GLFW_KEY_A) == GLFW_PRESS)
+                camera.set_pos(camera.get_pos() +
+                               glm::vec3(-1.f * deltaTime * 2, 0.0, 0.0));
+        }
+
         // Fill background
         renderer.fill(0.3f, 0.3f, 0.2f);
         float tv = glfwGetTime();
         float sin_pos = sin(tv) / 5.0f;
         float cos_pos = cos(tv) / 5.0f;
         shader.use();
-        
-    
+
         glm::vec3 cur = cubePositions[0];
         test.set_rotation(glm::vec3(glm::radians(0.0f), 0.0f, 0.0f));
         test.set_scale(glm::vec3(0.5f, 0.5f, 0.5f));
         test.set_position(glm::vec3(cur.x, cur.y, cur.z + 0.0f));
 
-        const float radius = 3;
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
-
-        camera.set_pos(glm::vec3(0, 1, 5));
         glm::mat4 model = test.get_model_matrix();
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
@@ -193,20 +207,21 @@ int main() {
 
         // shader.set_vec3f("test", cos_pos, sin_pos, 0.0f);
         the_model.draw();
-        
+
+        const float radius = 3;
+        float camX = sin(glfwGetTime()) * radius;
+        float camZ = cos(glfwGetTime()) * radius;
 
         moon_t.set_position(glm::vec3(camX, 0.0f, camZ));
         moon_t.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
-        moon_t.set_rotation(glm::vec3(glm::radians(180.0f), glm::radians(0.0), 0.0f));
+        moon_t.set_rotation(
+            glm::vec3(glm::radians(180.0f), glm::radians(0.0), 0.0f));
 
         model = moon_t.get_model_matrix();
 
-        shader.set_mat4f("model", model);
-        shader.set_mat4f("view", view);
-        shader.set_mat4f("projection", projection);
+        shader.set_mat4f("model", model);   
 
         moon.draw();
-        
 
         renderer.render();
     }
