@@ -28,9 +28,9 @@ void Mesh::setup_mesh() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           (void *)offsetof(struct Vertex, pos));
     glEnableVertexAttribArray(0);
-    // // color (r, g, b) location = 1
+    // // normal (x, y, z) location = 1
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *)offsetof(struct Vertex, color));
+                          (void *)offsetof(struct Vertex, normal));
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
@@ -81,9 +81,12 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Vertex> vertices;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        Vertex vertex(glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y,
-                                mesh->mVertices[i].z),
-                      glm::vec3(1.0, 0.0, 0.0));
+        Vertex vertex;
+        vertex.pos = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y,
+                                mesh->mVertices[i].z);
+        if(mesh->HasNormals())
+            vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y,
+                                    mesh->mNormals[i].z);
         vertices.push_back(vertex);
     }
 

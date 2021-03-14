@@ -70,6 +70,10 @@ void Shader::set_vec3f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3) {
     glUniform3f(glGetUniformLocation(m_program, name), v1, v2, v3);
 }
 
+void Shader::set_vec4f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4) {
+    glUniform4f(glGetUniformLocation(m_program, name), v1, v2, v3, v4);
+}
+
 void Shader::set_mat4f(const char* name, glm::mat4 v) {
     glUniformMatrix4fv(glGetUniformLocation(m_program, name), 1, GL_FALSE,
                        glm::value_ptr(v));

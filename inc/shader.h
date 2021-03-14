@@ -18,6 +18,7 @@ struct Shader {
     void use();
 
     void set_vec3f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3);
+    void set_vec4f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4);
     void set_mat4f(const char* name, glm::mat4 v);
 };
 

@@ -10,8 +10,7 @@
 
 struct Vertex {
     glm::vec3 pos;
-    glm::vec3 color;
-    Vertex(glm::vec3 p, glm::vec3 c) : pos(p), color(c) {}
+    glm::vec3 normal;
 };
 
 class Mesh {
