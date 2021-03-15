@@ -38,6 +38,9 @@ int main() {
 
     Model teapot_model;
     teapot_model.load_model(get_exe_path() + std::string("/env/monke.obj"));
+    
+    Model scene_model;
+    scene_model.load_model(get_exe_path() + std::string("/env/scene.obj"));
 
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
@@ -45,14 +48,18 @@ int main() {
     Transform teapot_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
                                glm::vec3(1.0, 1.0, 1.0));
 
-    GameObject teapot_object(teapot_transform, teapot_model);
+    Transform scene_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
+                               glm::vec3(1.0, 1.0, 1.0));
 
     Transform light_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
                               glm::vec3(1, 1, 1));
 
+    GameObject teapot_object(teapot_transform, teapot_model);
+
     GameObject light_object(light_transform, light_model);
 
-    Texture texture(get_exe_path() + std::string("/env/marble.jpg"));
+    GameObject scene_object(scene_transform, scene_model);
+
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     float deltaTime = 0.0f;
@@ -92,9 +99,6 @@ int main() {
 
         shader.use();
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture.id);
-
         light_object.transform.set_position(
             glm::vec3(sin_pos * 1, 0.2, cos(tv) * 1));
 
@@ -106,13 +110,12 @@ int main() {
         teapot_object.transform.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
         teapot_object.transform.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
         teapot_object.transform.set_rotation(
-            glm::vec3(glm::radians(0.0), glm::radians(0.0), 0.0f));
+            glm::vec3(glm::radians(0.0), glm::radians(sin_pos*90.0), 0.0f));
 
         glm::mat4 model = teapot_object.transform.get_model_matrix();
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
 
-        glUniform1i(glGetUniformLocation(shader.m_program, "ourTexture"), 0);
         shader.set_vec3f("ourColor", 1.0, 1.0, 1.0);
         shader.set_vec3f("lightColor", 1.0, 1.0, 1.0);
         shader.set_vec3f("lightPos", light_object.transform.get_position().x,
@@ -125,7 +128,13 @@ int main() {
         shader.set_mat4f("view", view);
         shader.set_mat4f("projection", projection);
 
-        teapot_object.draw();
+        teapot_object.draw(shader);
+        
+        scene_object.transform.set_position(glm::vec3(0.0, -1.0, -1.0));
+        scene_object.transform.set_scale(glm::vec3(0.4, 0.4, 0.4));
+        model = scene_object.transform.get_model_matrix();
+        shader.set_mat4f("model", model);
+        scene_object.draw(shader);
 
         light_shader.use();
 
@@ -135,7 +144,7 @@ int main() {
         light_shader.set_mat4f("view", view);
         light_shader.set_mat4f("projection", projection);
 
-        light_object.draw();
+        light_object.draw(light_shader);
         renderer.render();
     }
 

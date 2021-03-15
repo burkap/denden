@@ -1,10 +1,14 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <model.h>
+#include <util.h>
 
 #include <iostream>
 
-Mesh::Mesh(std::vector<Vertex> vertices) : vertices(vertices) { setup_mesh(); }
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures)
+    : vertices(vertices), textures(textures) {
+    setup_mesh();
+}
 
 void Mesh::setup_mesh() {
     glGenBuffers(1, &VBO);
@@ -41,7 +45,12 @@ void Mesh::setup_mesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::draw() {
+void Mesh::draw(Shader &shader) {
+    for (unsigned int i = 0; i < textures.size(); i++) {
+        shader.set_int("ourTexture", i);
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+    }
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     glBindVertexArray(0);
@@ -49,9 +58,9 @@ void Mesh::draw() {
 
 void Model::set_meshes(std::vector<Mesh> new_meshes) { meshes = new_meshes; }
 
-void Model::draw() {
+void Model::draw(Shader &shader) {
     for (Mesh &m : meshes) {
-        m.draw();
+        m.draw(shader);
     }
 }
 
@@ -84,6 +93,7 @@ void Model::process_node(aiNode *node, const aiScene *scene) {
 
 Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Vertex> vertices;
+    std::vector<Texture> textures;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
@@ -98,8 +108,35 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene) {
         } else {
             vertex.texture = glm::vec2(0.0, 0.0);
         }
+
         vertices.push_back(vertex);
+
+        aiMaterial *mat = scene->mMaterials[mesh->mMaterialIndex];
+        for (unsigned int i = 0;
+             i < mat->GetTextureCount(aiTextureType_DIFFUSE); i++) {
+            aiString str;
+            mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
+            bool cached = false;
+            for (Texture &t : texture_cache) {
+                aiString p;
+                p = get_exe_path();
+                p.Append("/env/");
+                p.Append(str.C_Str());
+                if (strcmp(t.path.c_str(), p.C_Str()) == 0) {
+                    textures.push_back(t);
+                    cached = true;
+                    break;
+                }
+            }
+            if (!cached) {
+                Texture texture(get_exe_path() + std::string("/env/") +
+                                std::string(str.C_Str()));
+                std::cout << "new: " << texture.path << "\n";
+                textures.push_back(texture);
+                texture_cache.push_back(texture);
+            }
+        }
     }
 
-    return Mesh(vertices);
+    return Mesh(vertices, textures);
 }

@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <iostream>
+#include <texture.h>
 
 struct Vertex {
     glm::vec3 pos;
@@ -23,24 +24,25 @@ struct Vertex {
 
 class Mesh {
     std::vector<Vertex> vertices;
+    std::vector<Texture> textures;
     unsigned int VAO, VBO;
 
    public:
-    Mesh(std::vector<Vertex> vertices);
+    Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures);
 
     void setup_mesh();
 
-    void draw();
+    void draw(Shader &shader);
 };
 
 class Model {
     std::vector<Mesh> meshes;
-
+    std::vector<Texture> texture_cache;
    public:
     void load_model(std::string path);
     void process_node(aiNode *node, const aiScene *scene);
     Mesh process_mesh(aiMesh *mesh, const aiScene *scene);
     void set_meshes(std::vector<Mesh> new_meshes);
-    void draw();
+    void draw(Shader &shader);
 };
 #endif

@@ -10,7 +10,9 @@
 struct Texture {
     int width, height, no_channels;
     unsigned int id;
+    std::string path;
     Texture(std::string path) {
+        this->path = path;
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
 
