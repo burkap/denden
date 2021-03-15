@@ -19,7 +19,6 @@
 #include <vector>
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static int last_x, last_y;
-    std::cout << "x: " << last_x - xpos << "y: " << last_y - ypos << "\n";
     last_x = xpos;
     last_y = ypos;
 }
@@ -28,9 +27,9 @@ int main() {
     Renderer renderer(800, 800, "Test");
 
     Camera camera(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, -1.0f),
-                  glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(45.0f),
+                  glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(60.0f),
                   (float)renderer.window_width / (float)renderer.window_height,
-                  1.0f, 30.0f);
+                  0.1f, 30.0f);
 
     renderer.init();
     Shader shader("vertex.shader", "fragment.shader");
@@ -48,7 +47,7 @@ int main() {
     GameObject teapot_object(teapot_transform, teapot_model);
 
     Transform light_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
-                              glm::vec3(0.1, 0.1, 0.1));
+                              glm::vec3(1, 1, 1));
 
     GameObject light_object(light_transform, light_model);
 
@@ -91,7 +90,12 @@ int main() {
         shader.use();
 
         light_object.transform.set_position(
-            glm::vec3(sin_pos * 3, 3, cos(tv) * 3));
+            glm::vec3(sin_pos * 1, 0.2, cos(tv) * 1));
+
+        light_object.transform.set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
+
+        light_object.transform.set_rotation(glm::vec3(glm::radians(sin_pos*90.0), glm::radians(cos(tv)*90.0), 0.0f));
+
         teapot_object.transform.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
         teapot_object.transform.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
         teapot_object.transform.set_rotation(
