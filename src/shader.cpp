@@ -66,6 +66,11 @@ GLuint Shader::create_program(GLuint vs, GLuint fs) {
 
 void Shader::use() { glUseProgram(m_program); }
 
+
+void Shader::set_int(const char* name, int i) {
+    glUniform1i(glGetUniformLocation(m_program, name), i);
+}
+
 void Shader::set_vec3f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3) {
     glUniform3f(glGetUniformLocation(m_program, name), v1, v2, v3);
 }

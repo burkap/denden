@@ -3,8 +3,9 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+
 #include <cstdio>
+#include <glm/glm.hpp>
 #include <string>
 
 struct Shader {
@@ -17,8 +18,10 @@ struct Shader {
 
     void use();
 
+    void set_int(const char* name, int i);
     void set_vec3f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3);
-    void set_vec4f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4);
+    void set_vec4f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3,
+                   GLfloat v4);
     void set_mat4f(const char* name, glm::mat4 v);
 };
 

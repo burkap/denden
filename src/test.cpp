@@ -7,6 +7,7 @@
 #include <renderer.h>
 #include <shader.h>
 #include <stddef.h> /* offsetof */
+#include <texture.h>
 #include <transform.h>
 #include <util.h>
 
@@ -36,7 +37,7 @@ int main() {
     Shader light_shader("light_vertex.shader", "light_fragment.shader");
 
     Model teapot_model;
-    teapot_model.load_model(get_exe_path() + std::string("/test/scene.obj"));
+    teapot_model.load_model(get_exe_path() + std::string("/env/monke.obj"));
 
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
@@ -51,6 +52,7 @@ int main() {
 
     GameObject light_object(light_transform, light_model);
 
+    Texture texture(get_exe_path() + std::string("/env/marble.jpg"));
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     float deltaTime = 0.0f;
@@ -87,26 +89,32 @@ int main() {
         renderer.fill(0.3f, 0.3f, 0.2f);
         float tv = glfwGetTime();
         float sin_pos = sin(tv);
+
         shader.use();
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture.id);
 
         light_object.transform.set_position(
             glm::vec3(sin_pos * 1, 0.2, cos(tv) * 1));
 
         light_object.transform.set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
 
-        light_object.transform.set_rotation(glm::vec3(glm::radians(sin_pos*90.0), glm::radians(cos(tv)*90.0), 0.0f));
+        light_object.transform.set_rotation(glm::vec3(
+            glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
         teapot_object.transform.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
         teapot_object.transform.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
         teapot_object.transform.set_rotation(
-            glm::vec3(glm::radians(0.0), glm::radians(45.0), 0.0f));
+            glm::vec3(glm::radians(0.0), glm::radians(0.0), 0.0f));
 
         glm::mat4 model = teapot_object.transform.get_model_matrix();
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
 
-        shader.set_vec3f("ourColor", 1.0, 0.7, 0.3);
-        shader.set_vec3f("lightColor", 0.0, 0.2, 1.0);
+        glUniform1i(glGetUniformLocation(shader.m_program, "ourTexture"), 0);
+        shader.set_vec3f("ourColor", 1.0, 1.0, 1.0);
+        shader.set_vec3f("lightColor", 1.0, 1.0, 1.0);
         shader.set_vec3f("lightPos", light_object.transform.get_position().x,
                          light_object.transform.get_position().y,
                          light_object.transform.get_position().z);

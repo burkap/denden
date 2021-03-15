@@ -4,7 +4,9 @@ out vec4 FragColor;
 
 in vec3 FragPos;
 in vec3 Normal;
+in vec2 TexCoords;
 
+uniform sampler2D ourTexture;
 uniform vec3 ourColor;
 uniform vec3 lightColor;
 uniform vec3 lightPos;
@@ -39,5 +41,7 @@ void main()
     vec3 diffuse = diff * lightColor;
 
     vec3 result = (ambient + diffuse + specular + specular2 + specular3) * ourColor;
-    FragColor = vec4(result, 1.0);
+    
+    // mix 
+    FragColor = mix(vec4(texture(ourTexture, TexCoords).rgb, 1.0), vec4(result, 1.0), 0.2);
 }

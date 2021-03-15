@@ -33,6 +33,11 @@ void Mesh::setup_mesh() {
                           (void *)offsetof(struct Vertex, normal));
     glEnableVertexAttribArray(1);
 
+    // // texture coordinates (x, y) location = 2
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *)offsetof(struct Vertex, texture));
+    glEnableVertexAttribArray(2);
+
     glBindVertexArray(0);
 }
 
@@ -83,10 +88,16 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene) {
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
         vertex.pos = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y,
-                                mesh->mVertices[i].z);
-        if(mesh->HasNormals())
+                               mesh->mVertices[i].z);
+        if (mesh->HasNormals())
             vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y,
-                                    mesh->mNormals[i].z);
+                                      mesh->mNormals[i].z);
+        if (mesh->HasTextureCoords(0)) {
+            vertex.texture = glm::vec2(mesh->mTextureCoords[0][i].x,
+                                       mesh->mTextureCoords[0][i].y);
+        } else {
+            vertex.texture = glm::vec2(0.0, 0.0);
+        }
         vertices.push_back(vertex);
     }
 
