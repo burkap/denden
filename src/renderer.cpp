@@ -1,4 +1,8 @@
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 #include <renderer.h>
+
 #include <cstdio>
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -34,8 +38,18 @@ void Renderer::init() {
         printf("Failed to initialize GLEW ERROR:%s\n", glewGetErrorString(err));
         running = false;
     }
-
     glEnable(GL_DEPTH_TEST);
+
+    // imgui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 150");  // glsl version
 }
 
 void Renderer::fill(float r, float g, float b, float a) {

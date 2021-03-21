@@ -3,6 +3,9 @@
 #include <GLFW/glfw3.h>
 #include <camera.h>
 #include <gameobject.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 #include <model.h>
 #include <renderer.h>
 #include <shader.h>
@@ -18,6 +21,7 @@
 #include <glm/mat4x4.hpp>
 #include <iostream>
 #include <vector>
+
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static int last_x, last_y;
     last_x = xpos;
@@ -38,7 +42,7 @@ int main() {
 
     Model teapot_model;
     teapot_model.load_model(get_exe_path() + std::string("/env/monke.obj"));
-    
+
     Model scene_model;
     scene_model.load_model(get_exe_path() + std::string("/env/scene.obj"));
 
@@ -49,7 +53,7 @@ int main() {
                                glm::vec3(1.0, 1.0, 1.0));
 
     Transform scene_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
-                               glm::vec3(1.0, 1.0, 1.0));
+                              glm::vec3(1.0, 1.0, 1.0));
 
     Transform light_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
                               glm::vec3(1, 1, 1));
@@ -60,12 +64,17 @@ int main() {
 
     GameObject scene_object(scene_transform, scene_model);
 
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
+    ImVec4 light_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    bool light_move = true;
+    bool wireframe = false;
     while (!glfwWindowShouldClose(renderer.window)) {
         {
+            if (wireframe)
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            else
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             float currentFrame = glfwGetTime();
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
@@ -99,8 +108,9 @@ int main() {
 
         shader.use();
 
-        light_object.transform.set_position(
-            glm::vec3(sin_pos * 1, 0.2, cos(tv) * 1));
+        if (light_move)
+            light_object.transform.set_position(
+                glm::vec3(sin_pos * 1, 0.2, cos(tv) * 1));
 
         light_object.transform.set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
 
@@ -110,14 +120,15 @@ int main() {
         teapot_object.transform.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
         teapot_object.transform.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
         teapot_object.transform.set_rotation(
-            glm::vec3(glm::radians(0.0), glm::radians(sin_pos*90.0), 0.0f));
+            glm::vec3(glm::radians(0.0), glm::radians(sin_pos * 90.0), 0.0f));
 
         glm::mat4 model = teapot_object.transform.get_model_matrix();
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
 
         shader.set_vec3f("ourColor", 1.0, 1.0, 1.0);
-        shader.set_vec3f("lightColor", 1.0, 1.0, 1.0);
+        shader.set_vec3f("lightColor", light_color.x, light_color.y,
+                         light_color.z);
         shader.set_vec3f("lightPos", light_object.transform.get_position().x,
                          light_object.transform.get_position().y,
                          light_object.transform.get_position().z);
@@ -129,7 +140,7 @@ int main() {
         shader.set_mat4f("projection", projection);
 
         teapot_object.draw(shader);
-        
+
         scene_object.transform.set_position(glm::vec3(0.0, -1.0, -1.0));
         scene_object.transform.set_scale(glm::vec3(0.4, 0.4, 0.4));
         model = scene_object.transform.get_model_matrix();
@@ -139,13 +150,45 @@ int main() {
         light_shader.use();
 
         model = light_object.transform.get_model_matrix();
-        light_shader.set_vec3f("ourColor", 1.0, 1.0, 1.0);
+        light_shader.set_vec3f("ourColor", light_color.x, light_color.y,
+                               light_color.z);
         light_shader.set_mat4f("model", model);
         light_shader.set_mat4f("view", view);
         light_shader.set_mat4f("projection", projection);
 
         light_object.draw(light_shader);
-        renderer.render();
+        // renderer.render();
+
+        glfwPollEvents();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        {
+            static int counter = 0;
+            ImGui::Begin("Test Window");
+
+            ImGui::Text("Test text");
+            ImGui::Checkbox("Light move", &light_move);
+            ImGui::Checkbox("Draw wireframe", &wireframe);
+            ImGui::ColorEdit3("Light color", (float*)&light_color);
+
+            if (ImGui::Button("Button")) counter++;
+            ImGui::SameLine();
+            ImGui::Text("counter = %d", counter);
+
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+                        1000.0f / ImGui::GetIO().Framerate,
+                        ImGui::GetIO().Framerate);
+            ImGui::End();
+        }
+        ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(renderer.window, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        glfwSwapBuffers(renderer.window);
     }
 
     glfwTerminate();
