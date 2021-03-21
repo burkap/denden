@@ -18,7 +18,9 @@ struct Shader {
 
     void use();
 
+    void set_bool(const char* name, bool i);
     void set_int(const char* name, int i);
+    void set_float(const char* name, float i);
     void set_vec3f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3);
     void set_vec4f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3,
                    GLfloat v4);

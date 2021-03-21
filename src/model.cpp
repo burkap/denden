@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <model.h>
+#include <texture.h>
 #include <util.h>
 
 #include <iostream>
@@ -47,7 +48,14 @@ void Mesh::setup_mesh() {
 
 void Mesh::draw(Shader &shader) {
     for (unsigned int i = 0; i < textures.size(); i++) {
-        shader.set_int("ourTexture", i);
+        switch (textures[i].type) {
+            case TextureType::Diffuse:
+                shader.set_int("material.diffuse", i);
+                break;
+            case TextureType::Specular:
+                shader.set_int("material.specular", i);
+                break;
+        }
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
@@ -91,10 +99,38 @@ void Model::process_node(aiNode *node, const aiScene *scene) {
     }
 }
 
+std::vector<Texture> Model::load_textures(aiMaterial *mat,
+                                          aiTextureType tex_type) {
+    std::vector<Texture> textures;
+    for (unsigned int i = 0; i < mat->GetTextureCount(tex_type); i++) {
+        aiString str;
+        mat->GetTexture(tex_type, i, &str);
+        bool cached = false;
+        for (Texture &t : texture_cache) {
+            aiString p;
+            p = get_exe_path();
+            p.Append("/env/");
+            p.Append(str.C_Str());
+            if (strcmp(t.path.c_str(), p.C_Str()) == 0) {
+                textures.push_back(t);
+                cached = true;
+                break;
+            }
+        };
+        if (!cached) {
+            Texture texture(get_exe_path() + std::string("/env/") +
+                                std::string(str.C_Str()),
+                            aitex_to_ourtex(tex_type));
+            textures.push_back(texture);
+            texture_cache.push_back(texture);
+        }
+    }
+    return textures;
+}
+
 Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Vertex> vertices;
     std::vector<Texture> textures;
-
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
         vertex.pos = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y,
@@ -112,30 +148,16 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene) {
         vertices.push_back(vertex);
 
         aiMaterial *mat = scene->mMaterials[mesh->mMaterialIndex];
-        for (unsigned int i = 0;
-             i < mat->GetTextureCount(aiTextureType_DIFFUSE); i++) {
-            aiString str;
-            mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
-            bool cached = false;
-            for (Texture &t : texture_cache) {
-                aiString p;
-                p = get_exe_path();
-                p.Append("/env/");
-                p.Append(str.C_Str());
-                if (strcmp(t.path.c_str(), p.C_Str()) == 0) {
-                    textures.push_back(t);
-                    cached = true;
-                    break;
-                }
-            }
-            if (!cached) {
-                Texture texture(get_exe_path() + std::string("/env/") +
-                                std::string(str.C_Str()));
-                std::cout << "new: " << texture.path << "\n";
-                textures.push_back(texture);
-                texture_cache.push_back(texture);
-            }
-        }
+
+        std::vector<Texture> diffuse_textures =
+            load_textures(mat, aiTextureType_DIFFUSE);
+        textures.insert(textures.end(), diffuse_textures.begin(),
+                        diffuse_textures.end());
+
+        std::vector<Texture> specular_textures =
+            load_textures(mat, aiTextureType_SPECULAR);
+        textures.insert(textures.end(), specular_textures.begin(),
+                        specular_textures.end());
     }
 
     return Mesh(vertices, textures);

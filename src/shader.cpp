@@ -66,16 +66,24 @@ GLuint Shader::create_program(GLuint vs, GLuint fs) {
 
 void Shader::use() { glUseProgram(m_program); }
 
+void Shader::set_bool(const char* name, bool i) {
+    glUniform1i(glGetUniformLocation(m_program, name), i);
+}
 
 void Shader::set_int(const char* name, int i) {
     glUniform1i(glGetUniformLocation(m_program, name), i);
+}
+
+void Shader::set_float(const char* name, float i) {
+    glUniform1f(glGetUniformLocation(m_program, name), i);
 }
 
 void Shader::set_vec3f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3) {
     glUniform3f(glGetUniformLocation(m_program, name), v1, v2, v3);
 }
 
-void Shader::set_vec4f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3, GLfloat v4) {
+void Shader::set_vec4f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3,
+                       GLfloat v4) {
     glUniform4f(glGetUniformLocation(m_program, name), v1, v2, v3, v4);
 }
 

@@ -38,9 +38,11 @@ class Mesh {
 class Model {
     std::vector<Mesh> meshes;
     std::vector<Texture> texture_cache;
+
    public:
     void load_model(std::string path);
     void process_node(aiNode *node, const aiScene *scene);
+    std::vector<Texture> load_textures(aiMaterial *mat, aiTextureType tex_type);
     Mesh process_mesh(aiMesh *mesh, const aiScene *scene);
     void set_meshes(std::vector<Mesh> new_meshes);
     void draw(Shader &shader);

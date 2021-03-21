@@ -41,7 +41,7 @@ int main() {
     Shader light_shader("light_vertex.shader", "light_fragment.shader");
 
     Model teapot_model;
-    teapot_model.load_model(get_exe_path() + std::string("/env/monke.obj"));
+    teapot_model.load_model(get_exe_path() + std::string("/env/metal_box.obj"));
 
     Model scene_model;
     scene_model.load_model(get_exe_path() + std::string("/env/scene.obj"));
@@ -68,6 +68,7 @@ int main() {
     float lastFrame = 0.0f;
     ImVec4 light_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     bool light_move = true;
+    bool enable_custom = false;
     bool wireframe = false;
     while (!glfwWindowShouldClose(renderer.window)) {
         {
@@ -118,18 +119,22 @@ int main() {
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
         teapot_object.transform.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
-        teapot_object.transform.set_position(glm::vec3(0.0f, 0.0f, 0.0f));
+        teapot_object.transform.set_position(glm::vec3(0.0f, 0.3f, 0.0f));
         teapot_object.transform.set_rotation(
-            glm::vec3(glm::radians(0.0), glm::radians(sin_pos * 90.0), 0.0f));
+            glm::vec3(glm::radians(0.0), glm::radians(90.0), 0.0f));
 
         glm::mat4 model = teapot_object.transform.get_model_matrix();
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
 
-        shader.set_vec3f("ourColor", 1.0, 1.0, 1.0);
-        shader.set_vec3f("lightColor", light_color.x, light_color.y,
+        shader.set_vec3f("light.diffuse", light_color.x / 2, light_color.y / 2,
+                         light_color.z / 2);
+        shader.set_vec3f("light.specular", light_color.x, light_color.y,
                          light_color.z);
-        shader.set_vec3f("lightPos", light_object.transform.get_position().x,
+        shader.set_vec3f("light.ambient", light_color.x / 5, light_color.y / 5,
+                         light_color.z / 5);
+        shader.set_vec3f("light.position",
+                         light_object.transform.get_position().x,
                          light_object.transform.get_position().y,
                          light_object.transform.get_position().z);
 
@@ -138,6 +143,9 @@ int main() {
         shader.set_mat4f("model", model);
         shader.set_mat4f("view", view);
         shader.set_mat4f("projection", projection);
+        shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
+        shader.set_float("material.shininess", 1.0f);
+        shader.set_bool("enable_custom_spec", enable_custom);
 
         teapot_object.draw(shader);
 
@@ -145,6 +153,9 @@ int main() {
         scene_object.transform.set_scale(glm::vec3(0.4, 0.4, 0.4));
         model = scene_object.transform.get_model_matrix();
         shader.set_mat4f("model", model);
+        shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
+        shader.set_float("material.shininess", 1.0f);
+        shader.set_bool("enable_custom_spec", enable_custom);
         scene_object.draw(shader);
 
         light_shader.use();
@@ -171,6 +182,7 @@ int main() {
             ImGui::Text("Test text");
             ImGui::Checkbox("Light move", &light_move);
             ImGui::Checkbox("Draw wireframe", &wireframe);
+            ImGui::Checkbox("Enable custom lighting", &enable_custom);
             ImGui::ColorEdit3("Light color", (float*)&light_color);
 
             if (ImGui::Button("Button")) counter++;
