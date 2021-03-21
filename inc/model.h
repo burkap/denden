@@ -3,21 +3,22 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <shader.h>
+#include <texture.h>
 
 #include <assimp/Importer.hpp>
 #include <glm/glm.hpp>
-#include <vector>
 #include <iostream>
-#include <texture.h>
+#include <vector>
 
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 normal;
     glm::vec2 texture;
-    void print(){
+    void print() {
         std::cout << "\nVertex: " << this << "\n";
         std::cout << "Pos: " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
-        std::cout << "Normal: " << normal.x << ", " << normal.y << ", " << normal.z << "\n";
+        std::cout << "Normal: " << normal.x << ", " << normal.y << ", "
+                  << normal.z << "\n";
         std::cout << "Texture: " << texture.x << ", " << texture.y << "\n";
     }
 };
