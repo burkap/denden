@@ -49,24 +49,20 @@ int main() {
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
 
-    Transform teapot_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
-                               glm::vec3(1.0, 1.0, 1.0));
+    Model light_model2;
+    light_model2.load_model(get_exe_path() + std::string("/test/cube3.obj"));
 
-    Transform scene_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
-                              glm::vec3(1.0, 1.0, 1.0));
+    GameObject teapot_object(teapot_model);
 
-    Transform light_transform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0),
-                              glm::vec3(1, 1, 1));
+    GameObject light_object(light_model);
+    GameObject light2_object(light_model2);
 
-    GameObject teapot_object(teapot_transform, teapot_model);
-
-    GameObject light_object(light_transform, light_model);
-
-    GameObject scene_object(scene_transform, scene_model);
+    GameObject scene_object(scene_model);
 
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
     ImVec4 light_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 light2_color = ImVec4(0.45f, 1.0f, 0.60f, 1.00f);
     bool light_move = true;
     bool enable_custom = false;
     bool wireframe = false;
@@ -112,10 +108,16 @@ int main() {
         if (light_move)
             light_object.transform.set_position(
                 glm::vec3(sin_pos * 1, 0.2, cos(tv) * 1));
+        if (light_move)
+            light2_object.transform.set_position(
+                glm::vec3(cos(tv) * 1, 0.5, sin_pos * 1));
 
         light_object.transform.set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
-
         light_object.transform.set_rotation(glm::vec3(
+            glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
+
+        light2_object.transform.set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
+        light2_object.transform.set_rotation(glm::vec3(
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
         teapot_object.transform.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
@@ -127,16 +129,35 @@ int main() {
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
 
-        shader.set_vec3f("light.diffuse", light_color.x / 2, light_color.y / 2,
-                         light_color.z / 2);
-        shader.set_vec3f("light.specular", light_color.x, light_color.y,
-                         light_color.z);
-        shader.set_vec3f("light.ambient", light_color.x / 5, light_color.y / 5,
-                         light_color.z / 5);
-        shader.set_vec3f("light.position",
+        shader.set_vec3f("pointLights[0].diffuse", light_color.x / 2,
+                         light_color.y / 2, light_color.z / 2);
+        shader.set_vec3f("pointLights[0].specular", light_color.x,
+                         light_color.y, light_color.z);
+        shader.set_vec3f("pointLights[0].ambient", light_color.x / 5,
+                         light_color.y / 5, light_color.z / 5);
+        shader.set_vec3f("pointLights[0].position",
                          light_object.transform.get_position().x,
                          light_object.transform.get_position().y,
                          light_object.transform.get_position().z);
+
+        shader.set_float("pointLights[0].constant", 1.0f);
+        shader.set_float("pointLights[0].linear", 0.09f);
+        shader.set_float("pointLights[0].quadratic", 0.032f);
+
+        shader.set_vec3f("pointLights[1].diffuse", light2_color.x / 2,
+                         light2_color.y / 2, light2_color.z / 2);
+        shader.set_vec3f("pointLights[1].specular", light2_color.x,
+                         light2_color.y, light2_color.z);
+        shader.set_vec3f("pointLights[1].ambient", light2_color.x / 5,
+                         light2_color.y / 5, light2_color.z / 5);
+        shader.set_vec3f("pointLights[1].position",
+                         light2_object.transform.get_position().x,
+                         light2_object.transform.get_position().y,
+                         light2_object.transform.get_position().z);
+
+        shader.set_float("pointLights[1].constant", 1.0f);
+        shader.set_float("pointLights[1].linear", 0.09f);
+        shader.set_float("pointLights[1].quadratic", 0.032f);
 
         glm::vec3 view_pos = camera.get_pos();
         shader.set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
@@ -156,6 +177,7 @@ int main() {
         shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
         shader.set_float("material.shininess", 1.0f);
         shader.set_bool("enable_custom_spec", enable_custom);
+        shader.set_int("material.specular", 0);
         scene_object.draw(shader);
 
         light_shader.use();
@@ -168,6 +190,12 @@ int main() {
         light_shader.set_mat4f("projection", projection);
 
         light_object.draw(light_shader);
+
+        model = light2_object.transform.get_model_matrix();
+        light_shader.set_vec3f("ourColor", light2_color.x, light2_color.y,
+                               light2_color.z);
+        light_shader.set_mat4f("model", model);
+        light2_object.draw(light_shader);
         // renderer.render();
 
         glfwPollEvents();
@@ -184,6 +212,8 @@ int main() {
             ImGui::Checkbox("Draw wireframe", &wireframe);
             ImGui::Checkbox("Enable custom lighting", &enable_custom);
             ImGui::ColorEdit3("Light color", (float*)&light_color);
+            ImGui::Text("Test text");
+            ImGui::ColorEdit3("Light2 color", (float*)&light2_color);
 
             if (ImGui::Button("Button")) counter++;
             ImGui::SameLine();
