@@ -6,12 +6,14 @@
 
 class GameObject {
    private:
-    Model mModel;
+    Model m_Model;
 
    public:
     Transform transform;
     GameObject(Transform transform, Model model)
-        : transform(transform), mModel(model) {}
+        : transform(transform), m_Model(model) {}
+    GameObject(Model model)
+        : m_Model(model) {}
     void set_model(Model model);
     void set_transform(Transform transform);
     void draw(Shader &shader);
