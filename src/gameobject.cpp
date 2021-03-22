@@ -1,5 +1,5 @@
 #include <gameobject.h>
-
+GameObject::GameObject() {}
 void GameObject::set_model(Model model) { m_Model = model; }
 void GameObject::set_transform(Transform transform) {
     this->transform = transform;

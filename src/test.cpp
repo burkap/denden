@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <lightobject.h>
 #include <model.h>
 #include <renderer.h>
 #include <shader.h>
@@ -49,13 +50,14 @@ int main() {
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
 
-    Model light_model2;
-    light_model2.load_model(get_exe_path() + std::string("/test/cube3.obj"));
-
     GameObject teapot_object(teapot_model);
 
-    GameObject light_object(light_model);
-    GameObject light2_object(light_model2);
+    PointLight light_object(light_model);
+    PointLight light2_object(light_model);
+
+    std::vector<PointLight> point_lights;
+    point_lights.push_back(light_object);
+    point_lights.push_back(light2_object);
 
     GameObject scene_object(scene_model);
 
@@ -75,6 +77,7 @@ int main() {
             float currentFrame = glfwGetTime();
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
+
             if (glfwGetKey(renderer.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
                 glfwSetWindowShouldClose(renderer.window, true);
 
@@ -96,6 +99,7 @@ int main() {
             if (glfwGetKey(renderer.window, GLFW_KEY_C) == GLFW_PRESS)
                 camera.set_pos(camera.get_pos() +
                                glm::vec3(0.0, -1.f * deltaTime * 2, 0.0));
+
         }
 
         // Fill background
@@ -129,35 +133,31 @@ int main() {
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
 
-        shader.set_vec3f("pointLights[0].diffuse", light_color.x / 2,
-                         light_color.y / 2, light_color.z / 2);
-        shader.set_vec3f("pointLights[0].specular", light_color.x,
-                         light_color.y, light_color.z);
-        shader.set_vec3f("pointLights[0].ambient", light_color.x / 5,
-                         light_color.y / 5, light_color.z / 5);
-        shader.set_vec3f("pointLights[0].position",
-                         light_object.transform.get_position().x,
-                         light_object.transform.get_position().y,
-                         light_object.transform.get_position().z);
+        light_object.set_diffuse(
+            glm::vec3(light_color.x / 2, light_color.y / 2, light_color.z / 2));
+        light_object.set_specular(
+            glm::vec3(light_color.x, light_color.y, light_color.z));
+        light_object.set_ambient(
+            glm::vec3(light_color.x / 5, light_color.y / 5, light_color.z / 5));
 
-        shader.set_float("pointLights[0].constant", 1.0f);
-        shader.set_float("pointLights[0].linear", 0.09f);
-        shader.set_float("pointLights[0].quadratic", 0.032f);
 
-        shader.set_vec3f("pointLights[1].diffuse", light2_color.x / 2,
-                         light2_color.y / 2, light2_color.z / 2);
-        shader.set_vec3f("pointLights[1].specular", light2_color.x,
-                         light2_color.y, light2_color.z);
-        shader.set_vec3f("pointLights[1].ambient", light2_color.x / 5,
-                         light2_color.y / 5, light2_color.z / 5);
-        shader.set_vec3f("pointLights[1].position",
-                         light2_object.transform.get_position().x,
-                         light2_object.transform.get_position().y,
-                         light2_object.transform.get_position().z);
+        light2_object.set_diffuse(
+            glm::vec3(light2_color.x / 2, light2_color.y / 2, light2_color.z / 2));
+        light2_object.set_specular(
+            glm::vec3(light2_color.x, light2_color.y, light2_color.z));
+        light2_object.set_ambient(
+            glm::vec3(light2_color.x / 5, light2_color.y / 5, light2_color.z / 5));
 
-        shader.set_float("pointLights[1].constant", 1.0f);
-        shader.set_float("pointLights[1].linear", 0.09f);
-        shader.set_float("pointLights[1].quadratic", 0.032f);
+        // for( PointLight &light : point_lights ){
+        //     light.apply(shader);
+        // }
+
+        light_object.apply(shader);
+        light2_object.apply(shader);
+
+//        for(int i = 0; i < PointLight::count; i++) {
+//            point_lights[i].apply(shader);
+//        }
 
         glm::vec3 view_pos = camera.get_pos();
         shader.set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);

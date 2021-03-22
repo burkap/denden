@@ -1,5 +1,5 @@
 #ifndef GAMEOBJECT_H
-#define GAMEOBJET_H
+#define GAMEOBJECT_H
 #include <model.h>
 #include <shader.h>
 #include <transform.h>
@@ -14,6 +14,7 @@ class GameObject {
         : transform(transform), m_Model(model) {}
     GameObject(Model model)
         : m_Model(model) {}
+    GameObject();
     void set_model(Model model);
     void set_transform(Transform transform);
     void draw(Shader &shader);
