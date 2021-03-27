@@ -99,7 +99,6 @@ int main() {
             if (glfwGetKey(renderer.window, GLFW_KEY_C) == GLFW_PRESS)
                 camera.set_pos(camera.get_pos() +
                                glm::vec3(0.0, -1.f * deltaTime * 2, 0.0));
-
         }
 
         // Fill background
@@ -140,13 +139,12 @@ int main() {
         light_object.set_ambient(
             glm::vec3(light_color.x / 5, light_color.y / 5, light_color.z / 5));
 
-
-        light2_object.set_diffuse(
-            glm::vec3(light2_color.x / 2, light2_color.y / 2, light2_color.z / 2));
+        light2_object.set_diffuse(glm::vec3(
+            light2_color.x / 2, light2_color.y / 2, light2_color.z / 2));
         light2_object.set_specular(
             glm::vec3(light2_color.x, light2_color.y, light2_color.z));
-        light2_object.set_ambient(
-            glm::vec3(light2_color.x / 5, light2_color.y / 5, light2_color.z / 5));
+        light2_object.set_ambient(glm::vec3(
+            light2_color.x / 5, light2_color.y / 5, light2_color.z / 5));
 
         // for( PointLight &light : point_lights ){
         //     light.apply(shader);
@@ -155,9 +153,9 @@ int main() {
         light_object.apply(shader);
         light2_object.apply(shader);
 
-//        for(int i = 0; i < PointLight::count; i++) {
-//            point_lights[i].apply(shader);
-//        }
+        //        for(int i = 0; i < PointLight::count; i++) {
+        //            point_lights[i].apply(shader);
+        //        }
 
         glm::vec3 view_pos = camera.get_pos();
         shader.set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);

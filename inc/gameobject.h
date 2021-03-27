@@ -12,8 +12,7 @@ class GameObject {
     Transform transform;
     GameObject(Transform transform, Model model)
         : transform(transform), m_Model(model) {}
-    GameObject(Model model)
-        : m_Model(model) {}
+    GameObject(Model model) : m_Model(model) {}
     GameObject();
     void set_model(Model model);
     void set_transform(Transform transform);

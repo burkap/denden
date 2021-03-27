@@ -18,7 +18,7 @@ class LightObject : public GameObject {
     };
 };
 
-class DirectionalLight : public LightObject{
+class DirectionalLight : public LightObject {
     glm::vec3 direction;
 
     void set_direction(glm::vec3 v) { direction = v; }
@@ -40,7 +40,7 @@ class PointLight : public LightObject {
         constant = 1.0f;
         linear = 0.09f;
         quadratic = 0.032f;
-     }
+    }
 
     void set_attenuation(float c, float l, float q) {
         constant = c;
