@@ -24,7 +24,7 @@ std::string Shader::read_shader(const char* path) {
     std::stringstream stream;
     std::fstream file;
     char actual_path[PATH_MAX];
-    strcpy(actual_path, get_exe_path());
+    strcpy(actual_path, get_exe_path().c_str());
     strcat(actual_path, "/");
     strcat(actual_path, path);
     file.open(actual_path);
