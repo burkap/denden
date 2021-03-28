@@ -42,10 +42,10 @@ int main() {
     Shader light_shader("light_vertex.shader", "light_fragment.shader");
 
     Model teapot_model;
-    teapot_model.load_model(get_exe_path() + std::string("/env/metal_box.obj"));
+    teapot_model.load_model(get_exe_path() + std::string("/env/new_cube.obj"));
 
     Model scene_model;
-    scene_model.load_model(get_exe_path() + std::string("/env/scene.obj"));
+    scene_model.load_model(get_exe_path() + std::string("/env/new_scene.obj"));
 
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));

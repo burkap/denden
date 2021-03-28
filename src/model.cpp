@@ -6,8 +6,9 @@
 
 #include <iostream>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures)
-    : vertices(vertices), textures(textures) {
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
+           std::vector<Texture> textures)
+    : vertices(vertices), indices(indices), textures(textures) {
     setup_mesh();
 }
 
@@ -18,6 +19,10 @@ void Mesh::setup_mesh() {
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+                 &indices[0], GL_STATIC_DRAW);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
                  &vertices[0], GL_STATIC_DRAW);
     // parameters respectively:
@@ -60,7 +65,8 @@ void Mesh::draw(Shader &shader) {
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    // glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     // Reset textures
@@ -135,6 +141,7 @@ std::vector<Texture> Model::load_textures(aiMaterial *mat,
 
 Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
@@ -151,19 +158,26 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene) {
         }
 
         vertices.push_back(vertex);
-
-        aiMaterial *mat = scene->mMaterials[mesh->mMaterialIndex];
-
-        std::vector<Texture> diffuse_textures =
-            load_textures(mat, aiTextureType_DIFFUSE);
-        textures.insert(textures.end(), diffuse_textures.begin(),
-                        diffuse_textures.end());
-
-        std::vector<Texture> specular_textures =
-            load_textures(mat, aiTextureType_SPECULAR);
-        textures.insert(textures.end(), specular_textures.begin(),
-                        specular_textures.end());
     }
 
-    return Mesh(vertices, textures);
+    aiMaterial *mat = scene->mMaterials[mesh->mMaterialIndex];
+
+    std::vector<Texture> diffuse_textures =
+        load_textures(mat, aiTextureType_DIFFUSE);
+    textures.insert(textures.end(), diffuse_textures.begin(),
+                    diffuse_textures.end());
+
+    std::vector<Texture> specular_textures =
+        load_textures(mat, aiTextureType_SPECULAR);
+    textures.insert(textures.end(), specular_textures.begin(),
+                    specular_textures.end());
+
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+        aiFace face = mesh->mFaces[i];
+        for (unsigned int j = 0; j < face.mNumIndices; j++) {
+            indices.push_back(face.mIndices[j]);
+        }
+    }
+
+    return Mesh(vertices, indices, textures);
 }

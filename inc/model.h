@@ -25,11 +25,13 @@ struct Vertex {
 
 class Mesh {
     std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
     std::vector<Texture> textures;
-    unsigned int VAO, VBO;
+    unsigned int VAO, VBO, EBO;
 
    public:
-    Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
+         std::vector<Texture> textures);
 
     void setup_mesh();
 
