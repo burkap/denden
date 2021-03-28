@@ -175,7 +175,6 @@ int main() {
         shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
         shader.set_float("material.shininess", 1.0f);
         shader.set_bool("enable_custom_spec", enable_custom);
-        shader.set_int("material.specular", 0);
         scene_object.draw(shader);
 
         light_shader.use();

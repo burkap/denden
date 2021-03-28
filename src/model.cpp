@@ -62,6 +62,11 @@ void Mesh::draw(Shader &shader) {
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     glBindVertexArray(0);
+
+    // Reset textures
+    shader.set_int("material.diffuse", 0);
+    shader.set_int("material.specular", 0);
+    glActiveTexture(GL_TEXTURE0);
 }
 
 void Model::set_meshes(std::vector<Mesh> new_meshes) { meshes = new_meshes; }
