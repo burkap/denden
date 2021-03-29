@@ -20,10 +20,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <vector>
 #include <component.h>
 #include <memory>
+#include <scene.h>
 #include <globals.h>
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -52,37 +54,31 @@ int main() {
 
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
+    Scene scene;
+    scene.set_active_camera(camera);
+    std::shared_ptr<GameObject> teapot_object = scene.create_gameobject("teapot");
+    teapot_object->add_component<Transform>();
+    teapot_object->add_component<Model>(teapot_model);
+    teapot_object->add_component<TestComponent>();
 
-    GameObject teapot_object;
-    teapot_object.add_component<Transform>();
-    teapot_object.add_component<Model>(teapot_model);
+    std::shared_ptr<GameObject> scene_object = scene.create_gameobject("plane");
+    scene_object->add_component<Transform>();
+    scene_object->add_component<Model>(scene_model);
 
-    teapot_object.add_component<TestComponent>();
-    std::shared_ptr<Component> keke = teapot_object.get_component<TestComponent>();
-    PointLight light_object;
-    light_object.add_component<Model>(light_model);
-    light_object.add_component<Transform>();
-    PointLight light2_object;
-    light2_object.add_component<Model>(light_model);
-    light2_object.add_component<Transform>();
+    std::shared_ptr<PointLight> light_object = scene.create_lightobject<PointLight>("light1");
+    light_object->add_component<Model>(light_model);
+    light_object->add_component<Transform>();
 
-    std::vector<PointLight> point_lights;
-    point_lights.push_back(light_object);
-    point_lights.push_back(light2_object);
-
-    GameObject scene_object;
-    scene_object.add_component<Transform>();
-    scene_object.add_component<Model>(scene_model);
+    std::shared_ptr<PointLight> light2_object = scene.create_lightobject<PointLight>("light2");
+    light2_object->add_component<Model>(light_model);
+    light2_object->add_component<Transform>();
 
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
-    ImVec4 light_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    ImVec4 light2_color = ImVec4(0.45f, 1.0f, 0.60f, 1.00f);
     bool light_move = true;
-    bool wireframe = false;
     while (!glfwWindowShouldClose(renderer.window)) {
         {
-            if (wireframe)
+            if (Globals::render_wireframe)
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             else
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -117,94 +113,22 @@ int main() {
         renderer.fill(0.3f, 0.3f, 0.2f);
         float tv = glfwGetTime();
         float sin_pos = sin(tv);
-
-        shader.use();
-
         if (light_move)
-            light_object.get_component<Transform>()->set_position(
-                glm::vec3(sin_pos * 1, 0.2, cos(tv) * 1));
+            light_object->get_component<Transform>()->set_position(
+                glm::vec3(sin_pos * 1, light2_object->get_component<Transform>()->m_position.y, cos(tv) * 1));
         if (light_move)
-            light2_object.get_component<Transform>()->set_position(
-                glm::vec3(cos(tv) * 1, 0.5, sin_pos * 1));
+            light2_object->get_component<Transform>()->set_position(
+                glm::vec3(cos(tv) * 1, light2_object->get_component<Transform>()->m_position.y, sin_pos * 1));
 
-        light_object.get_component<Transform>()->set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
-        light_object.get_component<Transform>()->set_rotation(glm::vec3(
+        light_object->get_component<Transform>()->set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
+        light_object->get_component<Transform>()->set_rotation(glm::vec3(
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
-        light2_object.get_component<Transform>()->set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
-        light2_object.get_component<Transform>()->set_rotation(glm::vec3(
+        light2_object->get_component<Transform>()->set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
+        light2_object->get_component<Transform>()->set_rotation(glm::vec3(
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
-        teapot_object.get_component<Transform>()->set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
-        teapot_object.get_component<Transform>()->set_position(glm::vec3(0.0f, 0.3f, 0.0f));
-        teapot_object.get_component<Transform>()->set_rotation(
-            glm::vec3(glm::radians(0.0), glm::radians(90.0), 0.0f));
-
-        glm::mat4 model = teapot_object.get_component<Transform>()->get_model_matrix();
-        glm::mat4 view = camera.get_view_matrix();
-        glm::mat4 projection = camera.get_projection_matrix();
-
-        light_object.set_diffuse(
-            glm::vec3(light_color.x / 2, light_color.y / 2, light_color.z / 2));
-        light_object.set_specular(
-            glm::vec3(light_color.x, light_color.y, light_color.z));
-        light_object.set_ambient(
-            glm::vec3(light_color.x / 5, light_color.y / 5, light_color.z / 5));
-
-        light2_object.set_diffuse(glm::vec3(
-            light2_color.x / 2, light2_color.y / 2, light2_color.z / 2));
-        light2_object.set_specular(
-            glm::vec3(light2_color.x, light2_color.y, light2_color.z));
-        light2_object.set_ambient(glm::vec3(
-            light2_color.x / 5, light2_color.y / 5, light2_color.z / 5));
-
-        // for( PointLight &light : point_lights ){
-        //     light.apply(shader);
-        // }
-
-        light_object.apply(shader);
-        light2_object.apply(shader);
-
-        //        for(int i = 0; i < PointLight::count; i++) {
-        //            point_lights[i].apply(shader);
-        //        }
-
-        glm::vec3 view_pos = camera.get_pos();
-        shader.set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
-        shader.set_mat4f("model", model);
-        shader.set_mat4f("view", view);
-        shader.set_mat4f("projection", projection);
-        shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
-        shader.set_float("material.shininess", 1.0f);
-        teapot_object.get_component<Model>()->draw(shader);
-        shader.set_bool("enable_custom_spec", Globals::enable_custom_lighting);
-
-        scene_object.get_component<Transform>()->set_position(glm::vec3(0.0, -1.0, -1.0));
-        scene_object.get_component<Transform>()->set_scale(glm::vec3(0.4, 0.4, 0.4));
-        model = scene_object.get_component<Transform>()->get_model_matrix();
-        shader.set_mat4f("model", model);
-        shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
-        shader.set_float("material.shininess", 1.0f);
-        scene_object.get_component<Model>()->draw(shader);
-        shader.set_bool("enable_custom_spec", Globals::enable_custom_lighting);
-
-        light_shader.use();
-
-        model = light_object.get_component<Transform>()->get_model_matrix();
-        light_shader.set_vec3f("ourColor", light_color.x, light_color.y,
-                               light_color.z);
-        light_shader.set_mat4f("model", model);
-        light_shader.set_mat4f("view", view);
-        light_shader.set_mat4f("projection", projection);
-
-        light_object.get_component<Model>()->draw(light_shader);
-
-        model = light2_object.get_component<Transform>()->get_model_matrix();
-        light_shader.set_vec3f("ourColor", light2_color.x, light2_color.y,
-                               light2_color.z);
-        light_shader.set_mat4f("model", model);
-        light2_object.get_component<Model>()->draw(light_shader);
-        // renderer.render();
+        scene.draw(shader, light_shader);
 
         glfwPollEvents();
 
@@ -217,11 +141,9 @@ int main() {
 
             ImGui::Text("Test text");
             ImGui::Checkbox("Light move", &light_move);
-            ImGui::Checkbox("Draw wireframe", &wireframe);
+            ImGui::Checkbox("Draw wireframe", &Globals::render_wireframe);
             ImGui::Checkbox("Enable custom lighting", &Globals::enable_custom_lighting);
-            ImGui::ColorEdit3("Light color", (float*)&light_color);
             ImGui::Text("Test text");
-            ImGui::ColorEdit3("Light2 color", (float*)&light2_color);
 
             if (ImGui::Button("Button")) counter++;
             ImGui::SameLine();
@@ -230,6 +152,81 @@ int main() {
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
                         1000.0f / ImGui::GetIO().Framerate,
                         ImGui::GetIO().Framerate);
+            ImGui::End();
+
+            ImGui::Begin("Scene");
+
+            ImGui::Text("Scene");
+            if (ImGui::CollapsingHeader("GameObjects"))
+            {
+                ImGui::Indent();
+                for(std::shared_ptr<GameObject> &go : scene.gameobjects){
+                    if(ImGui::TreeNode((go->name + " ID: " + std::to_string(go->id)).c_str())){
+                        int i = 0;
+                        for(auto &c : go->components){
+                            ImGui::PushID(i);
+                            ImGui::BulletText(c.first.name());
+                            if(c.first == typeid(Transform))
+                            {
+                                std::shared_ptr<Transform> tf = std::dynamic_pointer_cast<Transform>(c.second);
+                                glm::vec3 tf_pos = tf->get_position();
+                                glm::vec3 tf_rot = tf->get_rotation();
+                                glm::vec3 tf_scale = tf->get_scale();
+                                ImGui::SliderFloat3("Pos", glm::value_ptr(tf_pos), -1, 1);
+                                tf->set_position(tf_pos);
+                                ImGui::SliderFloat3("Rot", glm::value_ptr(tf_rot), -1, 1);
+                                tf->set_rotation(tf_rot);
+                                ImGui::SliderFloat3("Scale", glm::value_ptr(tf_scale), 0, 1);
+                                tf->set_scale(tf_scale);
+                            }
+                            ImGui::PopID();
+                            i++;
+                        }
+                    ImGui::TreePop();
+                    }
+                }
+                ImGui::Unindent();
+            }
+
+            if (ImGui::CollapsingHeader("LightObjects"))
+            {
+                ImGui::Indent();
+                for(std::shared_ptr<LightObject> &lo : scene.lightobjects){
+                    if(ImGui::TreeNode((lo->name+ " ID: " + std::to_string(lo->id)).c_str())){
+                        int i = 0;
+                        float temp[3];
+                        temp[0] = lo->color.x;
+                        temp[1] = lo->color.y;
+                        temp[2] = lo->color.z;
+                        ImGui::ColorEdit3("Light", temp);
+                        lo->color.x = temp[0];
+                        lo->color.y = temp[1];
+                        lo->color.z = temp[2];
+                        for(auto &c : lo->components){
+                            ImGui::PushID(i);
+                            ImGui::Text(c.first.name()+1);
+                            if(c.first == typeid(Transform))
+                            {
+                                std::shared_ptr<Transform> tf = std::dynamic_pointer_cast<Transform>(c.second);
+                                glm::vec3 tf_pos = tf->get_position();
+                                glm::vec3 tf_rot = tf->get_rotation();
+                                glm::vec3 tf_scale = tf->get_scale();
+                                ImGui::SliderFloat3("Pos", glm::value_ptr(tf_pos), -1, 1);
+                                tf->set_position(tf_pos);
+                                ImGui::SliderFloat3("Rot", glm::value_ptr(tf_rot), -1, 1);
+                                tf->set_rotation(tf_rot);
+                                ImGui::SliderFloat3("Scale", glm::value_ptr(tf_scale), 0, 1);
+                                tf->set_scale(tf_scale);
+                            }
+                            ImGui::PopID();
+                            i++;
+                        }
+                    ImGui::TreePop();
+                    }
+                }
+                ImGui::Unindent();
+            }
+
             ImGui::End();
         }
         ImGui::Render();
@@ -241,6 +238,9 @@ int main() {
         glfwSwapBuffers(renderer.window);
     }
 
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwTerminate();
     return 1;
 }
