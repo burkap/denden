@@ -21,10 +21,10 @@ struct Shader {
     void set_bool(const char* name, bool i);
     void set_int(const char* name, int i);
     void set_float(const char* name, float i);
-    void set_vec3f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3);
-    void set_vec4f(const char* name, GLfloat v1, GLfloat v2, GLfloat v3,
-                   GLfloat v4);
-    void set_mat4f(const char* name, glm::mat4 v);
+    void set_vec3f(const char* name, const GLfloat &v1, const GLfloat &v2, const GLfloat &v3);
+    void set_vec4f(const char* name, const GLfloat &v1, const GLfloat &v2, const GLfloat &v3,
+                   const GLfloat &v4);
+    void set_mat4f(const char* name, const glm::mat4 &v);
 };
 
 #endif
