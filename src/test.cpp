@@ -24,6 +24,7 @@
 #include <vector>
 #include <component.h>
 #include <memory>
+#include <globals.h>
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static int last_x, last_y;
@@ -78,7 +79,6 @@ int main() {
     ImVec4 light_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImVec4 light2_color = ImVec4(0.45f, 1.0f, 0.60f, 1.00f);
     bool light_move = true;
-    bool enable_custom = false;
     bool wireframe = false;
     while (!glfwWindowShouldClose(renderer.window)) {
         {
@@ -176,8 +176,8 @@ int main() {
         shader.set_mat4f("projection", projection);
         shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
         shader.set_float("material.shininess", 1.0f);
-        shader.set_bool("enable_custom_spec", enable_custom);
         teapot_object.get_component<Model>()->draw(shader);
+        shader.set_bool("enable_custom_spec", Globals::enable_custom_lighting);
 
         scene_object.get_component<Transform>()->set_position(glm::vec3(0.0, -1.0, -1.0));
         scene_object.get_component<Transform>()->set_scale(glm::vec3(0.4, 0.4, 0.4));
@@ -185,8 +185,8 @@ int main() {
         shader.set_mat4f("model", model);
         shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
         shader.set_float("material.shininess", 1.0f);
-        shader.set_bool("enable_custom_spec", enable_custom);
         scene_object.get_component<Model>()->draw(shader);
+        shader.set_bool("enable_custom_spec", Globals::enable_custom_lighting);
 
         light_shader.use();
 
@@ -218,7 +218,7 @@ int main() {
             ImGui::Text("Test text");
             ImGui::Checkbox("Light move", &light_move);
             ImGui::Checkbox("Draw wireframe", &wireframe);
-            ImGui::Checkbox("Enable custom lighting", &enable_custom);
+            ImGui::Checkbox("Enable custom lighting", &Globals::enable_custom_lighting);
             ImGui::ColorEdit3("Light color", (float*)&light_color);
             ImGui::Text("Test text");
             ImGui::ColorEdit3("Light2 color", (float*)&light2_color);
