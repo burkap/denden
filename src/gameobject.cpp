@@ -3,7 +3,17 @@
 #include <transform.h>
 #include <model.h>
 
-GameObject::GameObject() {}
+unsigned int GameObject::count = 0;
+
+GameObject::GameObject() {
+    id = count++;
+}
+
+GameObject::GameObject(std::string val) : GameObject()
+{
+    name = val;
+}
+
 template<typename T>
 void GameObject::add_component()
 {

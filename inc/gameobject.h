@@ -13,8 +13,12 @@ class GameObject {
    private:
 
    public:
+    unsigned int id;
+    static unsigned int count;
+    std::string name;
     std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
     GameObject();
+    GameObject(std::string val);
     template <typename T> void add_component();
     template <typename T> void add_component(T &a);
     template <typename T> std::shared_ptr<T> get_component();
