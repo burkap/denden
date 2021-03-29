@@ -39,7 +39,7 @@ template<typename T>
 
 std::shared_ptr<T> GameObject::get_component()
 {
-    if (components.find(typeid(T)) == components.end()) std::cout << typeid(T).name() << " not found!\n";
+    if (components.find(typeid(T)) == components.end()) return nullptr;
     return std::dynamic_pointer_cast<T>(components[typeid(T)]);
 }
 
