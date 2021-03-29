@@ -19,6 +19,6 @@ void PointLight::apply(Shader &shader) {
     shader.set_float(str, quadratic);
 
     sprintf(str, "pointLights[%i].position", id);
-    shader.set_vec3f(str, transform.m_position.x, transform.m_position.y,
-                     transform.m_position.z);
+    shader.set_vec3f(str, get_component<Transform>()->m_position.x, get_component<Transform>()->m_position.y,
+                     get_component<Transform>()->m_position.z);
 }

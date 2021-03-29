@@ -2,8 +2,10 @@
 #define TRANSFORM_H
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <component.h>
+#include <gameobject.h>
 
-class Transform {
+class Transform : public Component {
    public:
     glm::vec3 m_position, m_rotation, m_scale;
     Transform()

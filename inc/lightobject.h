@@ -7,8 +7,7 @@
 class LightObject : public GameObject {
    public:
     glm::vec3 ambient, diffuse, specular;
-
-    LightObject(Model &model) : GameObject(model) {}
+    LightObject(){}
 
     void set_ambient(glm::vec3 v) { ambient = v; }
     void set_diffuse(glm::vec3 v) { diffuse = v; }
@@ -34,7 +33,7 @@ class PointLight : public LightObject {
    public:
     static int count;
 
-    PointLight(Model &model) : LightObject(model) {
+    PointLight(){
         id = count;
         count++;
         constant = 1.0f;

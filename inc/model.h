@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
+#include <component.h>
 
 struct Vertex {
     glm::vec3 pos;
@@ -38,7 +39,7 @@ class Mesh {
     void draw(Shader &shader);
 };
 
-class Model {
+class Model : public Component {
     std::vector<Mesh> meshes;
     std::vector<Texture> texture_cache;
 

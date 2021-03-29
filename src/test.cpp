@@ -22,6 +22,8 @@
 #include <glm/mat4x4.hpp>
 #include <iostream>
 #include <vector>
+#include <component.h>
+#include <memory>
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static int last_x, last_y;
@@ -50,16 +52,26 @@ int main() {
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
 
-    GameObject teapot_object(teapot_model);
+    GameObject teapot_object;
+    teapot_object.add_component<Transform>();
+    teapot_object.add_component<Model>(teapot_model);
 
-    PointLight light_object(light_model);
-    PointLight light2_object(light_model);
+    teapot_object.add_component<TestComponent>();
+    std::shared_ptr<Component> keke = teapot_object.get_component<TestComponent>();
+    PointLight light_object;
+    light_object.add_component<Model>(light_model);
+    light_object.add_component<Transform>();
+    PointLight light2_object;
+    light2_object.add_component<Model>(light_model);
+    light2_object.add_component<Transform>();
 
     std::vector<PointLight> point_lights;
     point_lights.push_back(light_object);
     point_lights.push_back(light2_object);
 
-    GameObject scene_object(scene_model);
+    GameObject scene_object;
+    scene_object.add_component<Transform>();
+    scene_object.add_component<Model>(scene_model);
 
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
@@ -109,26 +121,26 @@ int main() {
         shader.use();
 
         if (light_move)
-            light_object.transform.set_position(
+            light_object.get_component<Transform>()->set_position(
                 glm::vec3(sin_pos * 1, 0.2, cos(tv) * 1));
         if (light_move)
-            light2_object.transform.set_position(
+            light2_object.get_component<Transform>()->set_position(
                 glm::vec3(cos(tv) * 1, 0.5, sin_pos * 1));
 
-        light_object.transform.set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
-        light_object.transform.set_rotation(glm::vec3(
+        light_object.get_component<Transform>()->set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
+        light_object.get_component<Transform>()->set_rotation(glm::vec3(
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
-        light2_object.transform.set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
-        light2_object.transform.set_rotation(glm::vec3(
+        light2_object.get_component<Transform>()->set_scale(glm::vec3(0.03f, 0.03f, 0.03f));
+        light2_object.get_component<Transform>()->set_rotation(glm::vec3(
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
-        teapot_object.transform.set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
-        teapot_object.transform.set_position(glm::vec3(0.0f, 0.3f, 0.0f));
-        teapot_object.transform.set_rotation(
+        teapot_object.get_component<Transform>()->set_scale(glm::vec3(0.3f, 0.3f, 0.3f));
+        teapot_object.get_component<Transform>()->set_position(glm::vec3(0.0f, 0.3f, 0.0f));
+        teapot_object.get_component<Transform>()->set_rotation(
             glm::vec3(glm::radians(0.0), glm::radians(90.0), 0.0f));
 
-        glm::mat4 model = teapot_object.transform.get_model_matrix();
+        glm::mat4 model = teapot_object.get_component<Transform>()->get_model_matrix();
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 projection = camera.get_projection_matrix();
 
@@ -165,34 +177,33 @@ int main() {
         shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
         shader.set_float("material.shininess", 1.0f);
         shader.set_bool("enable_custom_spec", enable_custom);
+        teapot_object.get_component<Model>()->draw(shader);
 
-        teapot_object.draw(shader);
-
-        scene_object.transform.set_position(glm::vec3(0.0, -1.0, -1.0));
-        scene_object.transform.set_scale(glm::vec3(0.4, 0.4, 0.4));
-        model = scene_object.transform.get_model_matrix();
+        scene_object.get_component<Transform>()->set_position(glm::vec3(0.0, -1.0, -1.0));
+        scene_object.get_component<Transform>()->set_scale(glm::vec3(0.4, 0.4, 0.4));
+        model = scene_object.get_component<Transform>()->get_model_matrix();
         shader.set_mat4f("model", model);
         shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
         shader.set_float("material.shininess", 1.0f);
         shader.set_bool("enable_custom_spec", enable_custom);
-        scene_object.draw(shader);
+        scene_object.get_component<Model>()->draw(shader);
 
         light_shader.use();
 
-        model = light_object.transform.get_model_matrix();
+        model = light_object.get_component<Transform>()->get_model_matrix();
         light_shader.set_vec3f("ourColor", light_color.x, light_color.y,
                                light_color.z);
         light_shader.set_mat4f("model", model);
         light_shader.set_mat4f("view", view);
         light_shader.set_mat4f("projection", projection);
 
-        light_object.draw(light_shader);
+        light_object.get_component<Model>()->draw(light_shader);
 
-        model = light2_object.transform.get_model_matrix();
+        model = light2_object.get_component<Transform>()->get_model_matrix();
         light_shader.set_vec3f("ourColor", light2_color.x, light2_color.y,
                                light2_color.z);
         light_shader.set_mat4f("model", model);
-        light2_object.draw(light_shader);
+        light2_object.get_component<Model>()->draw(light_shader);
         // renderer.render();
 
         glfwPollEvents();

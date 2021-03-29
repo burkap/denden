@@ -3,20 +3,21 @@
 #include <model.h>
 #include <shader.h>
 #include <transform.h>
+#include <component.h>
+
+#include <unordered_map>
+#include <typeindex>
+#include <memory>
 
 class GameObject {
    private:
-    Model m_Model;
 
    public:
-    Transform transform;
-    GameObject(Transform transform, Model model)
-        : transform(transform), m_Model(model) {}
-    GameObject(Model model) : m_Model(model) {}
+    std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
     GameObject();
-    void set_model(Model model);
-    void set_transform(Transform transform);
-    void draw(Shader &shader);
+    template <typename T> void add_component();
+    template <typename T> void add_component(T &a);
+    template <typename T> std::shared_ptr<T> get_component();
 };
 
 #endif
