@@ -47,10 +47,10 @@ int main() {
     Shader light_shader("light_vertex.shader", "light_fragment.shader");
 
     Model teapot_model;
-    teapot_model.load_model(get_exe_path() + std::string("/env/new_cube.obj"));
+    teapot_model.load_model(get_exe_path() + std::string("/env/bunny.obj"));
 
     Model scene_model;
-    scene_model.load_model(get_exe_path() + std::string("/env/new_scene.obj"));
+    scene_model.load_model(get_exe_path() + std::string("/env/new_scene2.obj"));
 
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
@@ -64,6 +64,7 @@ int main() {
     std::shared_ptr<GameObject> scene_object = scene.create_gameobject("plane");
     scene_object->add_component<Transform>();
     scene_object->add_component<Model>(scene_model);
+    scene_object->get_component<Transform>()->set_position(glm::vec3(-1.0, -3, 0.0));
 
     std::shared_ptr<PointLight> light_object = scene.create_lightobject<PointLight>("light1");
     light_object->add_component<Model>(light_model);
@@ -143,6 +144,8 @@ int main() {
             ImGui::Checkbox("Light move", &light_move);
             ImGui::Checkbox("Draw wireframe", &Globals::render_wireframe);
             ImGui::Checkbox("Enable custom lighting", &Globals::enable_custom_lighting);
+            ImGui::Checkbox("Enable Blinn lighting", &Globals::enable_blinn);
+
             ImGui::Text("Test text");
 
             if (ImGui::Button("Button")) counter++;

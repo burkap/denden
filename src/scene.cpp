@@ -76,6 +76,7 @@ void Scene::draw(Shader &shader, Shader &light_shader)
         shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
         shader.set_float("material.shininess", 1.0f);
         shader.set_bool("enable_custom_spec", Globals::enable_custom_lighting);
+        shader.set_bool("enable_blinn", Globals::enable_blinn);
         model->draw(shader);
     }
 }

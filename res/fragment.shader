@@ -40,6 +40,7 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 
 uniform DirectionalLight dir_light;
 uniform bool enable_custom_spec;
+uniform bool enable_blinn;
 uniform vec3 viewPos;
 
 vec3 calculate_dir_light(DirectionalLight light, vec3 normal, vec3 viewDir){
@@ -58,22 +59,30 @@ vec3 calculate_dir_light(DirectionalLight light, vec3 normal, vec3 viewDir){
 
 vec3 calculate_point_light(PointLight light, vec3 normal, vec3 FragPos, vec3 viewDir){
     vec3 lightDir = normalize(light.position - FragPos);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
 
     // diffuse
     float diff = max(dot(normal, lightDir), 0.0);
 
     // specular
     vec3 reflectDir = reflect(-lightDir, normal);
-    
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float g;
+    float s = 1;
+    if(enable_blinn) {
+        g = dot(normal, halfwayDir);
+        s = 3;
+    }
+    else g = dot(viewDir, reflectDir);
+
+    float spec = pow(max(g, 0.0), material.shininess*s);
     vec3 specular = vec3(texture(material.specular, TexCoords)) * spec * light.specular;
     
     if(enable_custom_spec)
     {
-        float spec2 = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess*64);
+        float spec2 = pow(max(g, 0.0), material.shininess*64*s);
         specular += (vec3(texture(material.specular, TexCoords)) * 2) * spec2 * light.specular; 
 
-        float spec3 = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess*2048);
+        float spec3 = pow(max(g, 0.0), material.shininess*2048*s);
         specular += (vec3(texture(material.specular, TexCoords)) * 10) * spec3 * light.specular;
     }
 
@@ -104,6 +113,5 @@ void main()
     for(int i = 0; i < NR_POINT_LIGHTS; i++){
         result += calculate_point_light(pointLights[i], norm, FragPos, viewDir);
     }
-    
     FragColor = vec4(result, 1.0);
 }
