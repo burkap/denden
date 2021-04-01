@@ -29,8 +29,24 @@
 #include <scene.h>
 #include <globals.h>
 
+glm::vec3 camera_front;
+double yaw = 0;
+double pitch = 0;
+int last_x = 0;
+int last_y = 0;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-    static int last_x, last_y;
+    int d_x = xpos-last_x, d_y = ypos - last_y;
+    yaw += d_x;
+    pitch -= d_y;
+    if(pitch > 89.0f)
+      pitch =  89.0f;
+    if(pitch < -89.0f)
+      pitch = -89.0f;
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    camera_front = glm::normalize(direction);
     last_x = xpos;
     last_y = ypos;
 }
@@ -94,6 +110,7 @@ int main() {
     bool light_move = true;
     while (!glfwWindowShouldClose(renderer.window)) {
         {
+            camera.set_target(camera_front);
             if (Globals::render_wireframe)
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             else
@@ -107,16 +124,14 @@ int main() {
 
             if (glfwGetKey(renderer.window, GLFW_KEY_W) == GLFW_PRESS)
                 camera.set_pos(camera.get_pos() +
-                               glm::vec3(0.0, 0.0, -1.f * deltaTime * 2));
+                               (camera_front * deltaTime * 2.0f));
             if (glfwGetKey(renderer.window, GLFW_KEY_S) == GLFW_PRESS)
-                camera.set_pos(camera.get_pos() +
-                               glm::vec3(0.0, 0.0, 1.f * deltaTime * 2));
+                camera.set_pos(camera.get_pos() -
+                               (camera_front * deltaTime * 2.0f));
             if (glfwGetKey(renderer.window, GLFW_KEY_D) == GLFW_PRESS)
-                camera.set_pos(camera.get_pos() +
-                               glm::vec3(1.f * deltaTime * 2, 0.0, 0.0));
+                camera.set_pos(camera.get_pos() + glm::normalize(glm::cross(camera_front, camera.get_up())) * deltaTime * 2.0f);
             if (glfwGetKey(renderer.window, GLFW_KEY_A) == GLFW_PRESS)
-                camera.set_pos(camera.get_pos() +
-                               glm::vec3(-1.f * deltaTime * 2, 0.0, 0.0));
+                camera.set_pos(camera.get_pos() - glm::normalize(glm::cross(camera_front, camera.get_up())) * deltaTime * 2.0f);
             if (glfwGetKey(renderer.window, GLFW_KEY_E) == GLFW_PRESS)
                 camera.set_pos(camera.get_pos() +
                                glm::vec3(0.0, 1.f * deltaTime * 2, 0.0));
