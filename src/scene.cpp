@@ -27,7 +27,7 @@ void Scene::set_active_camera(Camera &camera)
     active_camera = std::shared_ptr<Camera>(&camera);
 }
 
-void Scene::draw(Shader &shader, Shader &light_shader)
+void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader)
 {
     glm::mat4 view_matrix = active_camera->get_view_matrix();
     glm::mat4 projection_matrix = active_camera->get_projection_matrix();
@@ -79,4 +79,23 @@ void Scene::draw(Shader &shader, Shader &light_shader)
         shader.set_bool("enable_blinn", Globals::enable_blinn);
         model->draw(shader);
     }
+
+    glDepthFunc(GL_LEQUAL);
+    skybox_shader.use();
+    view_matrix = glm::mat4(glm::mat3(view_matrix)); // remove translation from the view matrix
+    skybox_shader.set_mat4f("view", view_matrix);
+    skybox_shader.set_mat4f("projection", projection_matrix);
+
+    glBindVertexArray(current_cubemap->get_vao());
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, current_cubemap->get_id());
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    glDepthFunc(GL_LESS);
+
+}
+
+void Scene::set_current_cubemap(CubeMap &cm)
+{
+    current_cubemap = std::shared_ptr<CubeMap>(&cm);
 }

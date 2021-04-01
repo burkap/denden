@@ -14,6 +14,7 @@
 #include <texture.h>
 #include <transform.h>
 #include <util.h>
+#include <cubemap.h>
 
 #include <cmath>
 #include <cstdio>
@@ -45,6 +46,7 @@ int main() {
     renderer.init();
     Shader shader("vertex.shader", "fragment.shader");
     Shader light_shader("light_vertex.shader", "light_fragment.shader");
+    Shader skybox_shader("cubemap_vertex.shader", "cubemap_fragment.shader");
 
     Model teapot_model;
     teapot_model.load_model(get_exe_path() + std::string("/env/bunny.obj"));
@@ -73,6 +75,19 @@ int main() {
     std::shared_ptr<PointLight> light2_object = scene.create_lightobject<PointLight>("light2");
     light2_object->add_component<Model>(light_model);
     light2_object->add_component<Transform>();
+
+    std::vector<std::string> faces =
+    {
+        "skybox/right.jpg",
+        "skybox/left.jpg",
+        "skybox/top.jpg",
+        "skybox/bottom.jpg",
+        "skybox/front.jpg",
+        "skybox/back.jpg"
+    };
+
+    CubeMap skybox(faces);
+    scene.set_current_cubemap(skybox);
 
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
@@ -129,7 +144,7 @@ int main() {
         light2_object->get_component<Transform>()->set_rotation(glm::vec3(
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
-        scene.draw(shader, light_shader);
+        scene.draw(shader, light_shader, skybox_shader);
 
         glfwPollEvents();
 
