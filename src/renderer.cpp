@@ -39,6 +39,7 @@ void Renderer::init() {
         running = false;
     }
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
     // imgui context
     IMGUI_CHECKVERSION();
