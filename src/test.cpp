@@ -7,6 +7,7 @@
 #include <collisionshape.h>
 #include <component.h>
 #include <cubemap.h>
+#include <debugdrawer.h>
 #include <gameobject.h>
 #include <globals.h>
 #include <imgui.h>

@@ -1,6 +1,7 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 #include <bullet/btBulletDynamicsCommon.h>
+#include <debugdrawer.h>
 
 #include <vector>
 class Physics {
@@ -19,6 +20,7 @@ class Physics {
     void add_rigidbody(btRigidBody* rb);
     void draw();
     btDiscreteDynamicsWorld* get_world();
+    void set_debug_drawer(DebugDrawer* db);
 };
 
 #endif  // PHYSICS_H
