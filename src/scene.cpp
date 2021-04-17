@@ -1,9 +1,13 @@
-#include <globals.h>
 #include <scene.h>
+#include <globals.h>
+#include <model.h>
+#include <transform.h>
+#include <rigidbody.h>
+#include <glm/gtc/quaternion.hpp>
 
 Scene::Scene()
 {
-
+    physics_handler.init();
 }
 
 std::shared_ptr<GameObject> Scene::create_gameobject(std::string name) {
@@ -25,8 +29,29 @@ void Scene::set_active_camera(Camera &camera) {
     active_camera = std::shared_ptr<Camera>(&camera);
 }
 
-void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader)
-{
+void Scene::step(float t) {
+    if (!Globals::simulate_steps) return;
+    physics_handler.step(t);
+
+    for (std::shared_ptr<GameObject> &g :
+         gameobjects) {  // loop through all gameobjects
+        std::shared_ptr<RigidBody> rb = g->get_component<RigidBody>();
+        if (rb != nullptr)  // that have a RigidBody component
+        {
+            btTransform t;
+            rb->get_rigidbody()->getMotionState()->getWorldTransform(t);
+            btVector3 pos = t.getOrigin();
+            btQuaternion rot = t.getRotation();
+            glm::quat q(rot.getW(), rot.getX(), rot.getY(), rot.getZ());
+
+            std::shared_ptr<Transform> g_t = g->get_component<Transform>();
+            g_t->set_position(glm::vec3(pos.getX(), pos.getY(), pos.getZ()));
+            if (Globals::rotate_collision) g_t->m_quaternion = q;
+        }
+    }
+}
+
+void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader) {
     glm::mat4 view_matrix = active_camera->get_view_matrix();
     glm::mat4 projection_matrix = active_camera->get_projection_matrix();
 
@@ -90,7 +115,6 @@ void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader)
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS);
-
 }
 
 void Scene::set_current_cubemap(CubeMap &cm) {

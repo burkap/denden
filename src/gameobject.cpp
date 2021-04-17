@@ -1,23 +1,21 @@
+#include <collisionshape.h>
 #include <gameobject.h>
-#include <typeinfo>
-#include <transform.h>
 #include <model.h>
+#include <rigidbody.h>
+#include <transform.h>
+
+#include <typeinfo>
 
 unsigned int GameObject::count = 0;
 
-GameObject::GameObject() {
-    id = count++;
-}
+GameObject::GameObject() { id = count++; }
 
-GameObject::GameObject(std::string val) : GameObject()
-{
-    name = val;
-}
+GameObject::GameObject(std::string val) : GameObject() { name = val; }
 
-template<typename T>
-void GameObject::add_component()
-{
+template <typename T>
+void GameObject::add_component() {
     components[typeid(T)] = std::shared_ptr<T>(new T());
+    components[typeid(T)]->set_parent(this);
 }
 
 template void GameObject::add_component<Component>();
@@ -28,6 +26,7 @@ template<typename T>
 void GameObject::add_component(T &a)
 {
     components[typeid(T)] = std::shared_ptr<T>(&a);
+    components[typeid(T)]->set_parent(this);
 }
 
 template void GameObject::add_component<Component>(Component &a);
@@ -35,10 +34,9 @@ template void GameObject::add_component<TestComponent>(TestComponent &a);
 template void GameObject::add_component<Transform>(Transform &a);
 template void GameObject::add_component<Model>(Model &a);
 
-template<typename T>
+template <typename T>
 
-std::shared_ptr<T> GameObject::get_component()
-{
+std::shared_ptr<T> GameObject::get_component() {
     if (components.find(typeid(T)) == components.end()) return nullptr;
     return std::dynamic_pointer_cast<T>(components[typeid(T)]);
 }
