@@ -87,9 +87,13 @@ int main() {
     teapot_object->add_component<Model>(teapot_model);
     teapot_object->get_component<Transform>()->set_position(
         glm::vec3(0.0, 5, 0.0));
-    teapot_object->add_component<CollisionShape>();
-    btCollisionShape* cs = new btBoxShape(btVector3(1, 1, 1));
-    teapot_object->get_component<CollisionShape>()->set_collision_shape(cs);
+    ShapeInfo shape;
+    shape.type = ShapeType::Capsule;
+    shape.vec = btVector3(1, 1, 1);
+    shape.radius = 1;
+    shape.height = 3;
+    CollisionShape col_shape(shape);
+    teapot_object->add_component<CollisionShape>(col_shape);
     teapot_object->add_component<RigidBody>();
     teapot_object->get_component<RigidBody>()->set_mass(0.1);
     btRigidBody* rb =
