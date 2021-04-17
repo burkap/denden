@@ -78,12 +78,13 @@ void Shader::set_float(const char* name, float i) {
     glUniform1f(glGetUniformLocation(m_program, name), i);
 }
 
-void Shader::set_vec3f(const char* name, const GLfloat &v1, const GLfloat &v2, const GLfloat &v3) {
+void Shader::set_vec3f(const char* name, const GLfloat& v1, const GLfloat& v2,
+                       const GLfloat& v3) {
     glUniform3f(glGetUniformLocation(m_program, name), v1, v2, v3);
 }
 
-void Shader::set_vec4f(const char* name, const GLfloat &v1, const GLfloat &v2, const GLfloat &v3,
-                       const GLfloat &v4) {
+void Shader::set_vec4f(const char* name, const GLfloat& v1, const GLfloat& v2,
+                       const GLfloat& v3, const GLfloat& v4) {
     glUniform4f(glGetUniformLocation(m_program, name), v1, v2, v3, v4);
 }
 

@@ -8,10 +8,8 @@ class LightObject : public GameObject {
    public:
     glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 ambient, diffuse, specular;
-    LightObject() : GameObject("unnamed"){}
-    LightObject(std::string name) : GameObject(name){
-
-    }
+    LightObject() : GameObject("unnamed") {}
+    LightObject(std::string name) : GameObject(name) {}
     void set_ambient(glm::vec3 v) { ambient = v; }
     void set_diffuse(glm::vec3 v) { diffuse = v; }
     void set_specular(glm::vec3 v) { specular = v; }
@@ -36,7 +34,7 @@ class PointLight : public LightObject {
    public:
     static int count;
 
-    PointLight(){
+    PointLight() {
         id = count;
         count++;
         constant = 1.0f;
@@ -44,7 +42,7 @@ class PointLight : public LightObject {
         quadratic = 0.032f;
     }
 
-    PointLight(std::string name) : LightObject(name){
+    PointLight(std::string name) : LightObject(name) {
         id = count;
         count++;
         constant = 1.0f;

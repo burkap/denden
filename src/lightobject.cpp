@@ -1,4 +1,5 @@
 #include <lightobject.h>
+#include <transform.h>
 
 int PointLight::count = 0;
 
@@ -19,6 +20,7 @@ void PointLight::apply(Shader &shader) {
     shader.set_float(str, quadratic);
 
     sprintf(str, "pointLights[%i].position", id);
-    shader.set_vec3f(str, get_component<Transform>()->m_position.x, get_component<Transform>()->m_position.y,
+    shader.set_vec3f(str, get_component<Transform>()->m_position.x,
+                     get_component<Transform>()->m_position.y,
                      get_component<Transform>()->m_position.z);
 }

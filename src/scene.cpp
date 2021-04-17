@@ -1,29 +1,27 @@
-#include <scene.h>
 #include <globals.h>
+#include <scene.h>
 
 Scene::Scene()
 {
 
 }
 
-std::shared_ptr<GameObject> Scene::create_gameobject(std::string name)
-{
+std::shared_ptr<GameObject> Scene::create_gameobject(std::string name) {
     std::shared_ptr<GameObject> new_object = std::make_shared<GameObject>(name);
     gameobjects.push_back(new_object);
     return new_object;
 }
 
-template<typename T>
-std::shared_ptr<T> Scene::create_lightobject(std::string name)
-{
+template <typename T>
+std::shared_ptr<T> Scene::create_lightobject(std::string name) {
     std::shared_ptr<T> new_object = std::make_shared<T>(name);
     lightobjects.push_back(new_object);
     return new_object;
 }
-template std::shared_ptr<PointLight> Scene::create_lightobject<PointLight>(std::string name);
+template std::shared_ptr<PointLight> Scene::create_lightobject<PointLight>(
+    std::string name);
 
-void Scene::set_active_camera(Camera &camera)
-{
+void Scene::set_active_camera(Camera &camera) {
     active_camera = std::shared_ptr<Camera>(&camera);
 }
 
@@ -35,12 +33,12 @@ void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader)
     light_shader.use();
     light_shader.set_mat4f("view", view_matrix);
     light_shader.set_mat4f("projection", projection_matrix);
-    for(std::shared_ptr<LightObject> &lo : lightobjects){
+    for (std::shared_ptr<LightObject> &lo : lightobjects) {
         std::shared_ptr<Model> model = lo->get_component<Model>();
-        if(model == nullptr) continue;
+        if (model == nullptr) continue;
 
         std::shared_ptr<Transform> transform = lo->get_component<Transform>();
-        if(transform == nullptr) continue;
+        if (transform == nullptr) continue;
 
         glm::vec3 light_color = lo->color;
         lo->set_diffuse(
@@ -57,20 +55,19 @@ void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader)
     }
 
     shader.use();
-    for(std::shared_ptr<LightObject> &lo : lightobjects)
-    {
+    for (std::shared_ptr<LightObject> &lo : lightobjects) {
         lo->apply(shader);
     }
     glm::vec3 view_pos = active_camera->get_pos();
     shader.set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
     shader.set_mat4f("view", view_matrix);
     shader.set_mat4f("projection", projection_matrix);
-    for (std::shared_ptr<GameObject> &go : gameobjects){
+    for (std::shared_ptr<GameObject> &go : gameobjects) {
         std::shared_ptr<Model> model = go->get_component<Model>();
-        if(model == nullptr) continue;
+        if (model == nullptr) continue;
 
         std::shared_ptr<Transform> transform = go->get_component<Transform>();
-        if(transform == nullptr) continue;
+        if (transform == nullptr) continue;
 
         shader.set_mat4f("model", transform->get_model_matrix());
         shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
@@ -82,8 +79,9 @@ void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader)
 
     glDepthFunc(GL_LEQUAL);
     skybox_shader.use();
-    view_matrix = glm::mat4(glm::mat3(view_matrix)); // remove translation from the view matrix
-    skybox_shader.set_mat4f("view", view_matrix);
+    glm::mat4 no_trans_view_matrix = glm::mat4(
+        glm::mat3(view_matrix));  // remove translation from the view matrix
+    skybox_shader.set_mat4f("view", no_trans_view_matrix);
     skybox_shader.set_mat4f("projection", projection_matrix);
 
     glBindVertexArray(current_cubemap->get_vao());
@@ -95,7 +93,6 @@ void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader)
 
 }
 
-void Scene::set_current_cubemap(CubeMap &cm)
-{
+void Scene::set_current_cubemap(CubeMap &cm) {
     current_cubemap = std::shared_ptr<CubeMap>(&cm);
 }

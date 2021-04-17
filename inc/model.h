@@ -2,6 +2,7 @@
 #define MODEL_H
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <component.h>
 #include <shader.h>
 #include <texture.h>
 
@@ -9,7 +10,6 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
-#include <component.h>
 
 struct Vertex {
     glm::vec3 pos;
