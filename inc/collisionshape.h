@@ -2,13 +2,15 @@
 #define COLLISIONSHAPE_H
 #include <bullet/btBulletCollisionCommon.h>
 #include <component.h>
+#include <model.h>
 
 #define FOREACH_SHAPE_TYPE(TYPE) \
     TYPE(Box)                    \
     TYPE(Sphere)                 \
     TYPE(Capsule)                \
     TYPE(Cylinder)               \
-    TYPE(Cone)
+    TYPE(Cone)                   \
+    TYPE(Mesh)
 
 #define GENERATE_ENUM(ENUM) ENUM,
 
@@ -19,6 +21,7 @@ struct ShapeInfo {
     btVector3 vec = btVector3(1, 1, 1);
     btScalar radius = 1;
     btScalar height = 1;
+    Model model;
 };
 
 class CollisionShape : public Component {
@@ -28,6 +31,7 @@ class CollisionShape : public Component {
     CollisionShape();
     CollisionShape(ShapeInfo info);
     ~CollisionShape();
+    btCollisionShape* create_mesh_shape(Model& model);
     btCollisionShape* get_collision_shape();
     void set_collision_shape(btCollisionShape* cs);
 };

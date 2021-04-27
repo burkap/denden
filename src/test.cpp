@@ -75,7 +75,7 @@ int main() {
     teapot_model.load_model(get_exe_path() + std::string("/env/p_cube.obj"));
 
     Model scene_model;
-    scene_model.load_model(get_exe_path() + std::string("/env/p_plane.obj"));
+    scene_model.load_model(get_exe_path() + std::string("/env/move_scene2.obj"));
 
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
@@ -88,10 +88,11 @@ int main() {
     teapot_object->get_component<Transform>()->set_position(
         glm::vec3(0.0, 5, 0.0));
     ShapeInfo shape;
-    shape.type = ShapeType::Capsule;
+    shape.type = ShapeType::Mesh;
     shape.vec = btVector3(1, 1, 1);
     shape.radius = 1;
     shape.height = 3;
+    shape.model = teapot_model;
     CollisionShape col_shape(shape);
     teapot_object->add_component<CollisionShape>(col_shape);
     teapot_object->add_component<RigidBody>();
@@ -141,8 +142,17 @@ int main() {
     scene_object->add_component<Model>(scene_model);
     scene_object->get_component<Transform>()->set_position(
         glm::vec3(0.0, -5, 0.0));
-    scene_object->get_component<Transform>()->set_scale(glm::vec3(4));
-    scene_object->add_component<CollisionShape>();
+    scene_object->get_component<Transform>()->set_scale(glm::vec3(1));
+
+    ShapeInfo scene_shape;
+    shape.type = ShapeType::Mesh;
+    shape.vec = btVector3(1, 1, 1);
+    shape.radius = 1;
+    shape.height = 3;
+    shape.model = scene_model;
+    CollisionShape scene_col(shape);
+
+    scene_object->add_component<CollisionShape>(scene_col);
     //    scene_object->get_component<CollisionShape>()->set_collision_shape(cs);
     scene_object->add_component<RigidBody>();
 

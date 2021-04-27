@@ -31,6 +31,8 @@ class Mesh {
     unsigned int VAO, VBO, EBO;
 
    public:
+    std::vector<Vertex> get_vertices() { return vertices; }
+    std::vector<unsigned int> get_indices() { return indices; }
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
          std::vector<Texture> textures);
 
@@ -44,6 +46,7 @@ class Model : public Component {
     std::vector<Texture> texture_cache;
 
    public:
+    std::vector<Mesh> get_meshes() { return meshes; }
     void load_model(std::string path);
     void process_node(aiNode *node, const aiScene *scene);
     std::vector<Texture> load_textures(aiMaterial *mat, aiTextureType tex_type);
