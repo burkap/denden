@@ -12,7 +12,7 @@
     COMPONENT_TYPE(RigidBody)                  \
     COMPONENT_TYPE(CollisionShape)
 
-#define ADD_COMPONENT(x) template void GameObject::add_component<x>();
+#define ADD_COMPONENT(x) template void GameObject::add_component<x>(x* a);
 #define ADD_COMPONENT_A(x) template void GameObject::add_component<x>(x & a);
 
 #define GET_COMPONENT(x) \
@@ -24,8 +24,8 @@ GameObject::GameObject() { id = count++; }
 GameObject::GameObject(std::string val) : GameObject() { name = val; }
 
 template <typename T>
-void GameObject::add_component() {
-    components[typeid(T)] = std::shared_ptr<T>(new T());
+void GameObject::add_component(T* t /* = new T() */) {
+    components[typeid(T)] = std::shared_ptr<T>(t);
     components[typeid(T)]->set_parent(this);
 }
 
