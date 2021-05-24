@@ -16,24 +16,45 @@
 
 enum class ShapeType { FOREACH_SHAPE_TYPE(GENERATE_ENUM) };
 
-struct ShapeInfo {
-    ShapeType type;
-    btVector3 vec = btVector3(1, 1, 1);
-    btScalar radius = 1;
-    btScalar height = 1;
-    Model model;
-};
-
 class CollisionShape : public Component {
+   protected:
     btCollisionShape* collision_shape;
-
    public:
     CollisionShape();
-    CollisionShape(ShapeInfo info);
     ~CollisionShape();
     btCollisionShape* create_mesh_shape(Model& model);
     btCollisionShape* get_collision_shape();
     void set_collision_shape(btCollisionShape* cs);
+};
+
+class BoxShape : public CollisionShape {
+public:
+    BoxShape(float x, float y, float z);
+};
+
+class SphereShape : public CollisionShape {
+public:
+    SphereShape(float radius);
+};
+
+class CapsuleShape : public CollisionShape {
+public:
+    CapsuleShape(float radius, float height);
+};
+
+class CylinderShape : public CollisionShape {
+public:
+    CylinderShape(float x, float y, float z);
+};
+
+class ConeShape : public CollisionShape {
+public:
+    ConeShape(float radius, float height);
+};
+
+class MeshShape : public CollisionShape {
+public:
+    MeshShape(Model model);
 };
 
 #endif  // COLLISIONSHAPE_H

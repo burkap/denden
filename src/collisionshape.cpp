@@ -11,27 +11,28 @@ CollisionShape::CollisionShape() {
     collision_shape = new btBoxShape(btVector3(16, 0, 16));
 }
 
-CollisionShape::CollisionShape(ShapeInfo info) {
-    switch (info.type) {
-        case ShapeType::Box:
-            collision_shape = new btBoxShape(info.vec);
-            break;
-        case ShapeType::Sphere:
-            collision_shape = new btSphereShape(info.radius);
-            break;
-        case ShapeType::Capsule:
-            collision_shape = new btCapsuleShape(info.radius, info.height);
-            break;
-        case ShapeType::Cylinder:
-            collision_shape = new btCylinderShape(info.vec);
-            break;
-        case ShapeType::Cone:
-            collision_shape = new btConeShape(info.radius, info.height);
-            break;
-        case ShapeType::Mesh:
-            collision_shape = create_mesh_shape(info.model);
-            break;
-    }
+BoxShape::BoxShape(float x, float y, float z){
+    collision_shape = new btBoxShape(btVector3(x, y, z));
+}
+
+SphereShape::SphereShape(float radius){
+    collision_shape = new btSphereShape(radius);
+}
+
+CapsuleShape::CapsuleShape(float radius, float height){
+    collision_shape = new btCapsuleShape(radius, height);
+}
+
+CylinderShape::CylinderShape(float x, float y, float z){
+    collision_shape = new btCylinderShape(btVector3(x, y, z));
+}
+
+ConeShape::ConeShape(float radius, float height){
+    collision_shape = new btConeShape(radius, height);
+}
+
+MeshShape::MeshShape(Model model){
+    collision_shape = create_mesh_shape(model);
 }
 
 CollisionShape::~CollisionShape() { delete collision_shape; }
@@ -54,6 +55,7 @@ btCollisionShape* CollisionShape::create_mesh_shape(Model& model){
 btCollisionShape* CollisionShape::get_collision_shape() {
     return collision_shape;
 }
+
 void CollisionShape::set_collision_shape(btCollisionShape* cs) {
     collision_shape = cs;
 }
