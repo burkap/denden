@@ -33,6 +33,8 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <configparser.h>
+#include <shadermanager.h>
 
 glm::vec3 camera_front = glm::vec3(0, 0, -1);
 double yaw = 270;
@@ -65,11 +67,6 @@ int main() {
                   0.1f, 120.0f);
 
     renderer.init();
-    Shader shader("vertex.shader", "fragment.shader");
-    Shader light_shader("light_vertex.shader", "light_fragment.shader");
-    Shader skybox_shader("cubemap_vertex.shader", "cubemap_fragment.shader");
-
-    Shader debug_shader("debug_vertex.shader", "debug_fragment.shader");
 
     Model teapot_model;
     teapot_model.load_model(get_exe_path() + std::string("/env/p_cube.obj"));
@@ -226,7 +223,7 @@ int main() {
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
         scene.step(deltaTime);
-        scene.draw(shader, light_shader, skybox_shader, debug_shader);
+        scene.draw();
 
         glfwPollEvents();
 

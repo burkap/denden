@@ -4,6 +4,7 @@
 #include <shader.h>
 
 #include <vector>
+#include <memory>
 
 struct Line {
     float x0, y0, z0;
@@ -33,7 +34,7 @@ struct Line {
 class DebugDrawer : public btIDebugDraw {
     int m_debugMode;
     unsigned int line_VAO, line_VBO;
-    Shader* debug_shader;
+    std::shared_ptr<Shader> debug_shader;
     glm::mat4 view, projection;
     std::vector<Line> lines;
 
@@ -42,7 +43,7 @@ class DebugDrawer : public btIDebugDraw {
     virtual ~DebugDrawer();
     void set_view(glm::mat4 v);
     void set_projection(glm::mat4 p);
-    void set_shader(Shader* shader);
+    void set_shader(std::shared_ptr<Shader> shader);
     virtual void drawLine(const btVector3& from, const btVector3& to,
                           const btVector3& fromColor, const btVector3& toColor);
 

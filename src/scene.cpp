@@ -4,6 +4,7 @@
 #include <scene.h>
 #include <transform.h>
 
+#include <shadermanager.h>
 #include <glm/gtc/quaternion.hpp>
 
 Scene::Scene() {
@@ -57,14 +58,17 @@ void Scene::step(float t) {
         }
     }
 }
-void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader,
-                 Shader &debug_shader) {
+void Scene::draw() {
     glm::mat4 view_matrix = active_camera->get_view_matrix();
     glm::mat4 projection_matrix = active_camera->get_projection_matrix();
 
-    light_shader.use();
-    light_shader.set_mat4f("view", view_matrix);
-    light_shader.set_mat4f("projection", projection_matrix);
+    std::shared_ptr<Shader> shader = ShaderManager::the()->get_default_shader();
+    std::shared_ptr<Shader> light_shader = ShaderManager::the()->get_light_shader();
+    std::shared_ptr<Shader> skybox_shader = ShaderManager::the()->get_skybox_shader();
+    std::shared_ptr<Shader> debug_shader = ShaderManager::the()->get_debug_shader();
+    light_shader->use();
+    light_shader->set_mat4f("view", view_matrix);
+    light_shader->set_mat4f("projection", projection_matrix);
     for (std::shared_ptr<LightObject> &lo : lightobjects) {
         std::shared_ptr<Model> model = lo->get_component<Model>();
         if (model == nullptr) continue;
@@ -80,20 +84,20 @@ void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader,
         lo->set_ambient(
             glm::vec3(light_color.x / 5, light_color.y / 5, light_color.z / 5));
 
-        light_shader.set_vec3f("ourColor", light_color.x, light_color.y,
+        light_shader->set_vec3f("ourColor", light_color.x, light_color.y,
                                light_color.z);
-        light_shader.set_mat4f("model", transform->get_model_matrix());
-        model->draw(light_shader);
+        light_shader->set_mat4f("model", transform->get_model_matrix());
+        model->draw(light_shader.get());
     }
 
-    shader.use();
+    shader->use();
     for (std::shared_ptr<LightObject> &lo : lightobjects) {
         lo->apply(shader);
     }
     glm::vec3 view_pos = active_camera->get_pos();
-    shader.set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
-    shader.set_mat4f("view", view_matrix);
-    shader.set_mat4f("projection", projection_matrix);
+    shader->set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
+    shader->set_mat4f("view", view_matrix);
+    shader->set_mat4f("projection", projection_matrix);
     for (std::shared_ptr<GameObject> &go : gameobjects) {
         std::shared_ptr<Model> model = go->get_component<Model>();
         if (model == nullptr) continue;
@@ -101,20 +105,20 @@ void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader,
         std::shared_ptr<Transform> transform = go->get_component<Transform>();
         if (transform == nullptr) continue;
 
-        shader.set_mat4f("model", transform->get_model_matrix());
-        shader.set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
-        shader.set_float("material.shininess", 1.0f);
-        shader.set_bool("enable_custom_spec", Globals::enable_custom_lighting);
-        shader.set_bool("enable_blinn", Globals::enable_blinn);
-        model->draw(shader);
+        shader->set_mat4f("model", transform->get_model_matrix());
+        shader->set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
+        shader->set_float("material.shininess", 1.0f);
+        shader->set_bool("enable_custom_spec", Globals::enable_custom_lighting);
+        shader->set_bool("enable_blinn", Globals::enable_blinn);
+        model->draw(shader.get());
     }
 
     glDepthFunc(GL_LEQUAL);
-    skybox_shader.use();
+    skybox_shader->use();
     glm::mat4 no_trans_view_matrix = glm::mat4(
         glm::mat3(view_matrix));  // remove translation from the view matrix
-    skybox_shader.set_mat4f("view", no_trans_view_matrix);
-    skybox_shader.set_mat4f("projection", projection_matrix);
+    skybox_shader->set_mat4f("view", no_trans_view_matrix);
+    skybox_shader->set_mat4f("projection", projection_matrix);
 
     glBindVertexArray(current_cubemap->get_vao());
     glActiveTexture(GL_TEXTURE0);
@@ -123,7 +127,7 @@ void Scene::draw(Shader &shader, Shader &light_shader, Shader &skybox_shader,
     glBindVertexArray(0);
     glDepthFunc(GL_LESS);
 
-    debug_drawer->set_shader(&debug_shader);
+    debug_drawer->set_shader(debug_shader);
     debug_drawer->set_view(active_camera->get_view_matrix());
     debug_drawer->set_projection(active_camera->get_projection_matrix());
 

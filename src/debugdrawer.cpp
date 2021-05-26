@@ -13,7 +13,7 @@ DebugDrawer::~DebugDrawer() { std::cout << "do nothing\n"; }
 void DebugDrawer::set_view(glm::mat4 v) { view = v; }
 void DebugDrawer::set_projection(glm::mat4 p) { projection = p; }
 
-void DebugDrawer::set_shader(Shader *shader) { debug_shader = shader; }
+void DebugDrawer::set_shader(std::shared_ptr<Shader> shader) { debug_shader = shader; }
 
 void DebugDrawer::drawLine(const btVector3 &from, const btVector3 &to,
                            const btVector3 &fromColor,

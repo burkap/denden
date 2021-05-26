@@ -38,7 +38,7 @@ class Mesh {
 
     void setup_mesh();
 
-    void draw(Shader &shader);
+    void draw(Shader* shader);
 };
 
 class Model : public Component {
@@ -52,6 +52,6 @@ class Model : public Component {
     std::vector<Texture> load_textures(aiMaterial *mat, aiTextureType tex_type);
     Mesh process_mesh(aiMesh *mesh, const aiScene *scene);
     void set_meshes(std::vector<Mesh> new_meshes);
-    void draw(Shader &shader);
+    void draw(Shader* shader);
 };
 #endif

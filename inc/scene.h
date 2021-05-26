@@ -22,8 +22,7 @@ class Scene {
     std::shared_ptr<T> create_lightobject(std::string);
     void set_active_camera(Camera &camera);
     void step(float t);
-    void draw(Shader &shader, Shader &light_shader, Shader &skybox_shader,
-              Shader &debug_shader);
+    void draw();
     void set_current_cubemap(CubeMap &cm);
 };
 
