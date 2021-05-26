@@ -5,6 +5,9 @@
 
 #include <vector>
 class Physics {
+   private:
+    static Physics* instance;
+    DebugDrawer* debug_drawer;
     btBroadphaseInterface* broadphase;
     btDefaultCollisionConfiguration* config;
     btCollisionDispatcher* dispatcher;
@@ -12,6 +15,7 @@ class Physics {
     btDiscreteDynamicsWorld* world;
 
    public:
+    static Physics* the();
     std::vector<btRigidBody*> rbs;
     Physics();
     ~Physics();
@@ -20,7 +24,7 @@ class Physics {
     void add_rigidbody(btRigidBody* rb);
     void draw();
     btDiscreteDynamicsWorld* get_world();
-    void set_debug_drawer(DebugDrawer* db);
+    DebugDrawer* get_debug_drawer() { return debug_drawer; }
 };
 
 #endif  // PHYSICS_H

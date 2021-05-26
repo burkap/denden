@@ -8,14 +8,6 @@
 #include <glm/gtc/quaternion.hpp>
 
 Scene::Scene() {
-    physics_handler.init();
-
-    debug_drawer = new DebugDrawer();
-    debug_drawer->setDebugMode(
-        ((Globals::debug_draw_AABB) ? btIDebugDraw::DBG_DrawAabb : 0) +
-        ((Globals::debug_draw_wireframe) ? btIDebugDraw::DBG_DrawWireframe
-                                         : 0));
-    physics_handler.set_debug_drawer(debug_drawer);
 }
 
 std::shared_ptr<GameObject> Scene::create_gameobject(std::string name) {
@@ -39,7 +31,7 @@ void Scene::set_active_camera(Camera &camera) {
 
 void Scene::step(float t) {
     if (!Globals::simulate_steps) return;
-    physics_handler.step(t);
+    Physics::the()->step(t);
 
     for (std::shared_ptr<GameObject> &g :
          gameobjects) {  // loop through all gameobjects
@@ -127,12 +119,12 @@ void Scene::draw() {
     glBindVertexArray(0);
     glDepthFunc(GL_LESS);
 
-    debug_drawer->set_shader(debug_shader);
-    debug_drawer->set_view(active_camera->get_view_matrix());
-    debug_drawer->set_projection(active_camera->get_projection_matrix());
+    Physics::the()->get_debug_drawer()->set_shader(debug_shader);
+    Physics::the()->get_debug_drawer()->set_view(active_camera->get_view_matrix());
+    Physics::the()->get_debug_drawer()->set_projection(active_camera->get_projection_matrix());
 
-    physics_handler.get_world()->debugDrawWorld();
-    debug_drawer->drawAll();
+    Physics::the()->get_world()->debugDrawWorld();
+    Physics::the()->get_debug_drawer()->drawAll();
 }
 
 void Scene::set_current_cubemap(CubeMap &cm) {

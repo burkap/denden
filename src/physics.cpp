@@ -1,5 +1,26 @@
 #include <physics.h>
-Physics::Physics() {}
+#include <globals.h>
+
+Physics* Physics::instance = nullptr;
+
+Physics *Physics::the()
+{
+    if(instance == nullptr){
+        instance = new Physics();
+    }
+    return instance;
+}
+
+Physics::Physics() {
+    init();
+
+    debug_drawer = new DebugDrawer();
+    debug_drawer->setDebugMode(
+        ((Globals::debug_draw_AABB) ? btIDebugDraw::DBG_DrawAabb : 0) +
+        ((Globals::debug_draw_wireframe) ? btIDebugDraw::DBG_DrawWireframe
+                                         : 0));
+   world->setDebugDrawer(debug_drawer);
+}
 
 Physics::~Physics() {
     delete world;
@@ -26,7 +47,6 @@ void Physics::add_rigidbody(btRigidBody *rb) {
     world->addRigidBody(rb);
 }
 
-void Physics::set_debug_drawer(DebugDrawer *db) { world->setDebugDrawer(db); }
 
 void Physics::step(float t) { world->stepSimulation(t); }
 

@@ -1,6 +1,7 @@
 #include <bullet/BulletCollision/CollisionShapes/btStaticPlaneShape.h>
 #include <rigidbody.h>
 #include <transform.h>
+#include <physics.h>
 RigidBody::RigidBody() {}
 
 void RigidBody::set_mass(double m) { mass = m; }
@@ -24,6 +25,7 @@ btRigidBody* RigidBody::create_rigidbody() {
                                                         plane, initial_inertia);
     info->m_friction = 1.0f;
     m_rigidbody = new btRigidBody(*info);
+    Physics::the()->add_rigidbody(m_rigidbody);
     return m_rigidbody;
 }
 

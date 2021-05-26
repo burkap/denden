@@ -10,8 +10,6 @@
 #include <memory>
 class Scene {
    public:
-    DebugDrawer *debug_drawer;
-    Physics physics_handler;
     std::shared_ptr<CubeMap> current_cubemap;
     std::vector<std::shared_ptr<GameObject>> gameobjects;
     std::vector<std::shared_ptr<LightObject>> lightobjects;

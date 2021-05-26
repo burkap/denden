@@ -89,7 +89,6 @@ int main() {
     teapot_object->get_component<RigidBody>()->set_mass(0.1);
     btRigidBody* rb =
         teapot_object->get_component<RigidBody>()->create_rigidbody();
-    scene.physics_handler.add_rigidbody(rb);
 
     std::shared_ptr<GameObject> teapot_object2 =
         scene.create_gameobject("teapot2");
@@ -102,7 +101,6 @@ int main() {
     teapot_object2->get_component<RigidBody>()->set_mass(0.1);
     btRigidBody* rb3 =
         teapot_object2->get_component<RigidBody>()->create_rigidbody();
-    scene.physics_handler.add_rigidbody(rb3);
 
     for (int i = 0; i < 5; i++) {
         std::shared_ptr<GameObject> aa =
@@ -115,7 +113,6 @@ int main() {
         aa->add_component<RigidBody>();
         aa->get_component<RigidBody>()->set_mass(0.1);
         btRigidBody* brbr = aa->get_component<RigidBody>()->create_rigidbody();
-        scene.physics_handler.add_rigidbody(brbr);
     }
 
     std::shared_ptr<GameObject> cube = scene.create_gameobject("cube");
@@ -134,7 +131,6 @@ int main() {
 
     btRigidBody* rb2 =
         scene_object->get_component<RigidBody>()->create_rigidbody();
-    scene.physics_handler.add_rigidbody(rb2);
 
     std::shared_ptr<PointLight> light_object =
         scene.create_lightobject<PointLight>("light1");
@@ -245,7 +241,7 @@ int main() {
             ImGui::Checkbox("Simulate physics", &Globals::simulate_steps);
             ImGui::Checkbox("Debug AABB", &Globals::debug_draw_AABB);
             ImGui::Checkbox("Debug Wireframe", &Globals::debug_draw_wireframe);
-            scene.debug_drawer->setDebugMode(
+            Physics::the()->get_debug_drawer()->setDebugMode(
                 ((Globals::debug_draw_AABB) ? btIDebugDraw::DBG_DrawAabb : 0) +
                 ((Globals::debug_draw_wireframe)
                      ? btIDebugDraw::DBG_DrawWireframe
