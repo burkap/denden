@@ -9,5 +9,6 @@
 #include <string>
 
 std::string get_exe_path();
+bool is_number(std::string str);
 
 #endif

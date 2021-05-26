@@ -14,3 +14,10 @@ std::string get_exe_path() {
     }
     return path;
 }
+
+bool is_number(std::string str){
+    for (char const &ch : str) {
+        if (std::isdigit(ch) == 0) return false;
+    }
+    return true;
+}
