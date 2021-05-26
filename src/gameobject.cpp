@@ -26,6 +26,7 @@ GameObject::GameObject(std::string val) : GameObject() { name = val; }
 template <typename T>
 void GameObject::add_component(T* t /* = new T() */) {
     components[typeid(T)] = std::shared_ptr<T>(t);
+    components[typeid(T)]->start();
     components[typeid(T)]->set_parent(this);
 }
 
@@ -34,6 +35,7 @@ FOREACH_COMPONENT_TYPE(ADD_COMPONENT)
 template <typename T>
 void GameObject::add_component(T &a) {
     components[typeid(T)] = std::shared_ptr<T>(&a);
+    components[typeid(T)]->start();
     components[typeid(T)]->set_parent(this);
 }
 

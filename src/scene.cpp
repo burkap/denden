@@ -29,6 +29,15 @@ void Scene::set_active_camera(Camera &camera) {
     active_camera = std::shared_ptr<Camera>(&camera);
 }
 
+void Scene::update_all(float t){
+    for (std::shared_ptr<GameObject> &g : gameobjects){
+        for(auto &a : g->components){
+            std::shared_ptr<Component> c = a.second;
+            c->update(t);
+        }
+    }
+}
+
 void Scene::step(float t) {
     if (!Globals::simulate_steps) return;
     Physics::the()->step(t);

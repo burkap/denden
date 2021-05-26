@@ -219,6 +219,7 @@ int main() {
             glm::radians(sin_pos * 90.0), glm::radians(cos(tv) * 90.0), 0.0f));
 
         scene.step(deltaTime);
+        scene.update_all(deltaTime);
         scene.draw();
 
         glfwPollEvents();

@@ -19,6 +19,7 @@ class Scene {
     template <typename T>
     std::shared_ptr<T> create_lightobject(std::string);
     void set_active_camera(Camera &camera);
+    void update_all(float t);
     void step(float t);
     void draw();
     void set_current_cubemap(CubeMap &cm);
