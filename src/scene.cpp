@@ -12,6 +12,7 @@ Scene::Scene() {
 
 std::shared_ptr<GameObject> Scene::create_gameobject(std::string name) {
     std::shared_ptr<GameObject> new_object = std::make_shared<GameObject>(name);
+    new_object->add_component<Transform>();
     gameobjects.push_back(new_object);
     return new_object;
 }

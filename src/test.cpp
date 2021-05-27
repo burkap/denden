@@ -80,7 +80,6 @@ int main() {
     scene.set_active_camera(camera);
     std::shared_ptr<GameObject> teapot_object =
         scene.create_gameobject("teapot");
-    teapot_object->add_component<Transform>();
     teapot_object->add_component<Model>(teapot_model);
     teapot_object->get_component<Transform>()->set_position(
         glm::vec3(0.0, 5, 0.0));
@@ -92,7 +91,6 @@ int main() {
 
     std::shared_ptr<GameObject> teapot_object2 =
         scene.create_gameobject("teapot2");
-    teapot_object2->add_component<Transform>();
     teapot_object2->add_component<Model>(teapot_model);
     teapot_object2->get_component<Transform>()->set_position(
         glm::vec3(1.3, 9, 0.0));
@@ -105,7 +103,6 @@ int main() {
     for (int i = 0; i < 5; i++) {
         std::shared_ptr<GameObject> aa =
             scene.create_gameobject("cube_" + std::to_string(i));
-        aa->add_component<Transform>();
         aa->add_component<Model>(teapot_model);
         aa->get_component<Transform>()->set_position(
             glm::vec3(1.3 + i % 5, 9 + i, i % 5));
@@ -116,12 +113,10 @@ int main() {
     }
 
     std::shared_ptr<GameObject> cube = scene.create_gameobject("cube");
-    cube->add_component<Transform>();
     cube->add_component<Model>(teapot_model);
     cube->get_component<Transform>()->set_position(glm::vec3(1, 15, 0.0));
 
     std::shared_ptr<GameObject> scene_object = scene.create_gameobject("plane");
-    scene_object->add_component<Transform>();
     scene_object->add_component<Model>(scene_model);
     scene_object->get_component<Transform>()->set_position(
         glm::vec3(0.0, -5, 0.0));
