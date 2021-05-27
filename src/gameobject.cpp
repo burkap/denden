@@ -3,14 +3,16 @@
 #include <model.h>
 #include <rigidbody.h>
 #include <transform.h>
-
+#include <components/lambdascript.h>
 #include <typeinfo>
+#include <camera.h>
 
 #define FOREACH_COMPONENT_TYPE(COMPONENT_TYPE) \
     COMPONENT_TYPE(Transform)                  \
     COMPONENT_TYPE(Model)                      \
     COMPONENT_TYPE(RigidBody)                  \
-    COMPONENT_TYPE(CollisionShape)
+    COMPONENT_TYPE(CollisionShape)             \
+    COMPONENT_TYPE(LambdaScript)               \
 
 #define ADD_COMPONENT(x) template void GameObject::add_component<x>(x* a);
 #define ADD_COMPONENT_A(x) template void GameObject::add_component<x>(x & a);
@@ -26,8 +28,8 @@ GameObject::GameObject(std::string val) : GameObject() { name = val; }
 template <typename T>
 void GameObject::add_component(T* t /* = new T() */) {
     components[typeid(T)] = std::shared_ptr<T>(t);
-    components[typeid(T)]->start();
     components[typeid(T)]->set_parent(this);
+    t->start();
 }
 
 FOREACH_COMPONENT_TYPE(ADD_COMPONENT)
@@ -35,8 +37,8 @@ FOREACH_COMPONENT_TYPE(ADD_COMPONENT)
 template <typename T>
 void GameObject::add_component(T &a) {
     components[typeid(T)] = std::shared_ptr<T>(&a);
-    components[typeid(T)]->start();
     components[typeid(T)]->set_parent(this);
+    a.start();
 }
 
 FOREACH_COMPONENT_TYPE(ADD_COMPONENT_A)
