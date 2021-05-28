@@ -2,9 +2,16 @@
 #include <rigidbody.h>
 #include <transform.h>
 #include <physics.h>
-RigidBody::RigidBody() {}
 
-void RigidBody::set_mass(double m) { mass = m; }
+RigidBody::RigidBody(){
+}
+
+RigidBody::RigidBody(double mass) : mass(mass) {
+}
+
+void RigidBody::set_mass(double m) {
+    mass = m;
+}
 btRigidBody* RigidBody::create_rigidbody() {
     // TO-DO: This should only be called IF the object has both Transform and
     // CollisionShape components
@@ -30,3 +37,6 @@ btRigidBody* RigidBody::create_rigidbody() {
 }
 
 btRigidBody* RigidBody::get_rigidbody() { return m_rigidbody; }
+void RigidBody::set_parent(GameObject* ptr) { parent = ptr;
+                                              create_rigidbody();
+                                            }

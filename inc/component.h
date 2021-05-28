@@ -14,7 +14,7 @@ class Component {
     Component();
     virtual void start() { /* do nothing */ }
     virtual void update(float dt) { /* do nothing */ }
-    void set_parent(GameObject* ptr);
+    virtual void set_parent(GameObject* ptr);
 };
 
 #endif  // COMPONENT_H

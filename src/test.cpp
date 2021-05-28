@@ -87,10 +87,7 @@ int main() {
     teapot_object->get_component<Transform>()->set_position(
         glm::vec3(0.0, 5, 0.0));
     teapot_object->add_component<CollisionShape>(new MeshShape(teapot_model));
-    teapot_object->add_component<RigidBody>();
-    teapot_object->get_component<RigidBody>()->set_mass(0.1);
-    btRigidBody* rb =
-        teapot_object->get_component<RigidBody>()->create_rigidbody();
+    teapot_object->add_component<RigidBody>(new RigidBody(0.1));
 
     std::shared_ptr<GameObject> teapot_object2 =
         scene.create_gameobject("teapot2");
@@ -98,10 +95,7 @@ int main() {
     teapot_object2->get_component<Transform>()->set_position(
         glm::vec3(1.3, 9, 0.0));
     teapot_object2->add_component<CollisionShape>(new BoxShape(1, 1, 1));
-    teapot_object2->add_component<RigidBody>();
-    teapot_object2->get_component<RigidBody>()->set_mass(0.1);
-    btRigidBody* rb3 =
-        teapot_object2->get_component<RigidBody>()->create_rigidbody();
+    teapot_object2->add_component<RigidBody>(new RigidBody(0.1));
 
     for (int i = 0; i < 5; i++) {
         std::shared_ptr<GameObject> aa =
@@ -110,9 +104,7 @@ int main() {
         aa->get_component<Transform>()->set_position(
             glm::vec3(1.3 + i % 5, 9 + i, i % 5));
         aa->add_component<CollisionShape>(new BoxShape(1, 1, 1));
-        aa->add_component<RigidBody>();
-        aa->get_component<RigidBody>()->set_mass(0.1);
-        btRigidBody* brbr = aa->get_component<RigidBody>()->create_rigidbody();
+        aa->add_component<RigidBody>(new RigidBody(0.1));
     }
 
     std::shared_ptr<GameObject> cube = scene.create_gameobject("cube");
@@ -126,9 +118,6 @@ int main() {
     scene_object->get_component<Transform>()->set_scale(glm::vec3(1));
     scene_object->add_component<CollisionShape>(new MeshShape(scene_model));
     scene_object->add_component<RigidBody>();
-
-    btRigidBody* rb2 =
-        scene_object->get_component<RigidBody>()->create_rigidbody();
 
     std::shared_ptr<PointLight> light_object =
         scene.create_lightobject<PointLight>("light1");
