@@ -61,11 +61,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 int main() {
     Renderer renderer(800, 800, "Test");
 
-    Camera camera(glm::vec3(0.0f, 0.0f, 15.0f), glm::vec3(0.0f, 0.0f, -1.0f),
-                  glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(75.0f),
-                  (float)renderer.window_width / (float)renderer.window_height,
-                  0.1f, 120.0f);
-
     renderer.init();
 
     Model teapot_model;
@@ -77,6 +72,14 @@ int main() {
     Model light_model;
     light_model.load_model(get_exe_path() + std::string("/test/cube3.obj"));
     Scene scene;
+
+    std::shared_ptr<GameObject> camera_object = scene.create_gameobject("Main Camera");
+    camera_object->add_component<Camera>(new Camera(glm::vec3(0.0f, 0.0f, 15.0f), glm::vec3(0.0f, 0.0f, -1.0f),
+                                                           glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(75.0f),
+                                                           (float)renderer.window_width / (float)renderer.window_height,
+                                                           0.1f, 120.0f));
+    std::shared_ptr<Camera> camera = camera_object->get_component<Camera>();
+
     scene.set_active_camera(camera);
     std::shared_ptr<GameObject> teapot_object =
         scene.create_gameobject("teapot");
@@ -150,7 +153,7 @@ int main() {
 
     while (!glfwWindowShouldClose(renderer.window)) {
         {
-            camera.set_target(camera_front);
+            camera->set_target(camera_front);
             if (Globals::render_wireframe)
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             else

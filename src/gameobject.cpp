@@ -13,6 +13,7 @@
     COMPONENT_TYPE(RigidBody)                  \
     COMPONENT_TYPE(CollisionShape)             \
     COMPONENT_TYPE(LambdaScript)               \
+    COMPONENT_TYPE(Camera)                     \
 
 #define ADD_COMPONENT(x) template void GameObject::add_component<x>(x* a);
 #define ADD_COMPONENT_A(x) template void GameObject::add_component<x>(x & a);
