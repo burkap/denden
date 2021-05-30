@@ -16,8 +16,8 @@ OBJEXT      := o
 
 #Flags, Libraries and Includes
 CFLAGS      := -Wall -g -DIMGUI_IMPL_OPENGL_LOADER_GLEW
-LIB         := -lGL -lglfw -lGLEW -lassimp
-INC         := -I$(INCDIR)
+LIB         := -lGL -lglfw -lGLEW -lassimp -lBulletDynamics -lBulletCollision -lLinearMath
+INC         := -I$(INCDIR) -I/usr/include/bullet/
 INCDEP      := -I$(INCDIR)
 
 #---------------------------------------------------------------------------------

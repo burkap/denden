@@ -51,14 +51,14 @@ void Mesh::setup_mesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader &shader) {
+void Mesh::draw(Shader* shader) {
     for (unsigned int i = 0; i < textures.size(); i++) {
         switch (textures[i].type) {
             case TextureType::Diffuse:
-                shader.set_int("material.diffuse", i);
+                shader->set_int("material.diffuse", i);
                 break;
             case TextureType::Specular:
-                shader.set_int("material.specular", i);
+                shader->set_int("material.specular", i);
                 break;
         }
         glActiveTexture(GL_TEXTURE0 + i);
@@ -70,14 +70,14 @@ void Mesh::draw(Shader &shader) {
     glBindVertexArray(0);
 
     // Reset textures
-    shader.set_int("material.diffuse", 0);
-    shader.set_int("material.specular", 0);
+    shader->set_int("material.diffuse", 0);
+    shader->set_int("material.specular", 0);
     glActiveTexture(GL_TEXTURE0);
 }
 
 void Model::set_meshes(std::vector<Mesh> new_meshes) { meshes = new_meshes; }
 
-void Model::draw(Shader &shader) {
+void Model::draw(Shader *shader) {
     for (Mesh &m : meshes) {
         m.draw(shader);
     }

@@ -1,48 +1,53 @@
+#include <collisionshape.h>
 #include <gameobject.h>
-#include <typeinfo>
-#include <transform.h>
 #include <model.h>
+#include <rigidbody.h>
+#include <transform.h>
+#include <components/lambdascript.h>
+#include <typeinfo>
+#include <camera.h>
 
+#define FOREACH_COMPONENT_TYPE(COMPONENT_TYPE) \
+    COMPONENT_TYPE(Transform)                  \
+    COMPONENT_TYPE(Model)                      \
+    COMPONENT_TYPE(RigidBody)                  \
+    COMPONENT_TYPE(CollisionShape)             \
+    COMPONENT_TYPE(LambdaScript)               \
+
+#define ADD_COMPONENT(x) template void GameObject::add_component<x>(x* a);
+#define ADD_COMPONENT_A(x) template void GameObject::add_component<x>(x & a);
+
+#define GET_COMPONENT(x) \
+    template std::shared_ptr<x> GameObject::get_component<x>();
 unsigned int GameObject::count = 0;
 
-GameObject::GameObject() {
-    id = count++;
+GameObject::GameObject() { id = count++; }
+
+GameObject::GameObject(std::string val) : GameObject() { name = val; }
+
+template <typename T>
+void GameObject::add_component(T* t /* = new T() */) {
+    components[typeid(T)] = std::shared_ptr<T>(t);
+    components[typeid(T)]->set_parent(this);
+    t->start();
 }
 
-GameObject::GameObject(std::string val) : GameObject()
-{
-    name = val;
-}
+FOREACH_COMPONENT_TYPE(ADD_COMPONENT)
 
-template<typename T>
-void GameObject::add_component()
-{
-    components[typeid(T)] = std::shared_ptr<T>(new T());
-}
-
-template void GameObject::add_component<Component>();
-template void GameObject::add_component<TestComponent>();
-template void GameObject::add_component<Transform>();
-template void GameObject::add_component<Model>();
-template<typename T>
-void GameObject::add_component(T &a)
-{
+template <typename T>
+void GameObject::add_component(T &a) {
     components[typeid(T)] = std::shared_ptr<T>(&a);
+    components[typeid(T)]->set_parent(this);
+    a.start();
 }
 
-template void GameObject::add_component<Component>(Component &a);
-template void GameObject::add_component<TestComponent>(TestComponent &a);
-template void GameObject::add_component<Transform>(Transform &a);
-template void GameObject::add_component<Model>(Model &a);
+FOREACH_COMPONENT_TYPE(ADD_COMPONENT_A)
 
-template<typename T>
+template <typename T>
 
-std::shared_ptr<T> GameObject::get_component()
-{
+std::shared_ptr<T> GameObject::get_component() {
     if (components.find(typeid(T)) == components.end()) return nullptr;
     return std::dynamic_pointer_cast<T>(components[typeid(T)]);
 }
 
-template std::shared_ptr<TestComponent> GameObject::get_component<TestComponent>();
-template std::shared_ptr<Transform> GameObject::get_component<Transform>();
-template std::shared_ptr<Model> GameObject::get_component<Model>();
+FOREACH_COMPONENT_TYPE(GET_COMPONENT)

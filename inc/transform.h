@@ -1,26 +1,31 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
+#include <component.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <component.h>
-#include <gameobject.h>
+#include <glm/gtc/quaternion.hpp>
 
 class Transform : public Component {
    public:
     glm::vec3 m_position, m_rotation, m_scale;
+    glm::quat m_quaternion;
     Transform()
         : m_position(glm::vec3(0, 0, 0)),
           m_rotation(glm::vec3(0, 0, 0)),
-          m_scale(glm::vec3(1.0, 1.0, 1.0)) {}
+          m_scale(glm::vec3(1.0, 1.0, 1.0)),
+          m_quaternion(glm::quat(1.0, 0.0, 0.0, 0.0)) {}
     Transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
         : m_position(position), m_rotation(rotation), m_scale(scale) {}
 
     glm::mat4 get_model_matrix() {
         glm::mat4 matrix(1.0f);
         matrix = glm::translate(matrix, m_position);
-        matrix = glm::rotate(matrix, m_rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-        matrix = glm::rotate(matrix, m_rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-        matrix = glm::rotate(matrix, m_rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        matrix = matrix * glm::mat4_cast(m_quaternion);
+        //        matrix = glm::rotate(matrix, m_rotation.x, glm::vec3(1.0f,
+        //        0.0f, 0.0f)); matrix = glm::rotate(matrix, m_rotation.y,
+        //        glm::vec3(0.0f, 1.0f, 0.0f)); matrix = glm::rotate(matrix,
+        //        m_rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
         matrix = glm::scale(matrix, m_scale);
         return matrix;
     }

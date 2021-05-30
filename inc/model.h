@@ -2,6 +2,7 @@
 #define MODEL_H
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <component.h>
 #include <shader.h>
 #include <texture.h>
 
@@ -9,7 +10,6 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
-#include <component.h>
 
 struct Vertex {
     glm::vec3 pos;
@@ -31,12 +31,14 @@ class Mesh {
     unsigned int VAO, VBO, EBO;
 
    public:
+    std::vector<Vertex> get_vertices() { return vertices; }
+    std::vector<unsigned int> get_indices() { return indices; }
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
          std::vector<Texture> textures);
 
     void setup_mesh();
 
-    void draw(Shader &shader);
+    void draw(Shader* shader);
 };
 
 class Model : public Component {
@@ -44,11 +46,12 @@ class Model : public Component {
     std::vector<Texture> texture_cache;
 
    public:
+    std::vector<Mesh> get_meshes() { return meshes; }
     void load_model(std::string path);
     void process_node(aiNode *node, const aiScene *scene);
     std::vector<Texture> load_textures(aiMaterial *mat, aiTextureType tex_type);
     Mesh process_mesh(aiMesh *mesh, const aiScene *scene);
     void set_meshes(std::vector<Mesh> new_meshes);
-    void draw(Shader &shader);
+    void draw(Shader* shader);
 };
 #endif
