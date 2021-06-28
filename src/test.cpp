@@ -129,6 +129,13 @@ int main() {
     light2_object->add_component<Model>(light_model);
     light2_object->add_component<Transform>();
 
+
+    std::shared_ptr<DirectionalLight> directional_light =
+            scene.create_lightobject<DirectionalLight>("Dir_light");
+    directional_light->add_component<Model>(light_model);
+    directional_light->add_component<Transform>();
+    directional_light->set_direction(glm::vec3(0, 0.3, 1));
+
     std::vector<std::string> faces = {"skybox/right.jpg", "skybox/left.jpg",
                                       "skybox/top.jpg",   "skybox/bottom.jpg",
                                       "skybox/front.jpg", "skybox/back.jpg"};

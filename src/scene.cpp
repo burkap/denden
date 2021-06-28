@@ -25,6 +25,8 @@ std::shared_ptr<T> Scene::create_lightobject(std::string name) {
 }
 template std::shared_ptr<PointLight> Scene::create_lightobject<PointLight>(
     std::string name);
+template std::shared_ptr<DirectionalLight> Scene::create_lightobject<DirectionalLight>(
+    std::string name);
 
 void Scene::set_active_camera(std::shared_ptr<Camera> camera) {
     active_camera = camera;
