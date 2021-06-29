@@ -25,6 +25,8 @@ std::shared_ptr<T> Scene::create_lightobject(std::string name) {
 }
 template std::shared_ptr<PointLight> Scene::create_lightobject<PointLight>(
     std::string name);
+template std::shared_ptr<DirectionalLight> Scene::create_lightobject<DirectionalLight>(
+    std::string name);
 
 void Scene::set_active_camera(std::shared_ptr<Camera> camera) {
     active_camera = camera;
@@ -97,6 +99,7 @@ void Scene::draw() {
         lo->apply(shader);
     }
     glm::vec3 view_pos = active_camera->get_pos();
+    view_pos = glm::normalize(glm::vec3(view_matrix * glm::vec4(view_pos, 0.)));
     shader->set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
     shader->set_mat4f("view", view_matrix);
     shader->set_mat4f("projection", projection_matrix);

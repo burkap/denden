@@ -24,3 +24,12 @@ void PointLight::apply(std::shared_ptr<Shader> shader) {
                      get_component<Transform>()->m_position.y,
                      get_component<Transform>()->m_position.z);
 }
+
+void DirectionalLight::apply(std::shared_ptr<Shader> shader)
+{
+    shader->set_vec3f("dir_light.ambient", ambient.x, ambient.y, ambient.z);
+    shader->set_vec3f("dir_light.diffuse", diffuse.x, diffuse.y, diffuse.z);
+    shader->set_vec3f("dir_light.specular", specular.x, specular.y, specular.z);
+
+    shader->set_vec3f("dir_light.direction", direction.x, direction.y, direction.y);
+}

@@ -21,10 +21,15 @@ class LightObject : public GameObject {
 class DirectionalLight : public LightObject {
     glm::vec3 direction;
 
+public:
+    DirectionalLight(){}
+
+    DirectionalLight(std::string name) : LightObject(name) {}
+
     void set_direction(glm::vec3 v) { direction = v; }
     glm::vec3 get_direction() { return direction; }
 
-    // void apply(Shader &shader) {}
+    void apply(std::shared_ptr<Shader> shader);
 };
 
 class PointLight : public LightObject {
