@@ -69,3 +69,13 @@ unsigned int CubeMap::get_id() { return id; }
 unsigned int CubeMap::get_vao() { return vao; }
 
 unsigned int CubeMap::get_vbo() { return vbo; }
+
+void CubeMap::draw()
+{
+    glBindVertexArray(vao);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    glDepthFunc(GL_LESS);
+}

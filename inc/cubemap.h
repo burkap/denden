@@ -11,6 +11,7 @@ class CubeMap {
     unsigned int get_id();
     unsigned int get_vao();
     unsigned int get_vbo();
+    void draw();
 };
 
 #endif  // CUBEMAP_H

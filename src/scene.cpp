@@ -62,14 +62,35 @@ void Scene::step(float t) {
         }
     }
 }
-void Scene::draw() {
+
+void Scene::render_gameobjects(){
     glm::mat4 view_matrix = active_camera->get_view_matrix();
     glm::mat4 projection_matrix = active_camera->get_projection_matrix();
 
-    std::shared_ptr<Shader> shader = ShaderManager::the()->get_default_shader();
-    std::shared_ptr<Shader> light_shader = ShaderManager::the()->get_light_shader();
-    std::shared_ptr<Shader> skybox_shader = ShaderManager::the()->get_skybox_shader();
-    std::shared_ptr<Shader> debug_shader = ShaderManager::the()->get_debug_shader();
+    glm::vec3 view_pos = active_camera->get_pos();
+    view_pos = glm::normalize(glm::vec3(view_matrix * glm::vec4(view_pos, 0.)));
+    shader->set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
+    shader->set_mat4f("view", view_matrix);
+    shader->set_mat4f("projection", projection_matrix);
+    for (std::shared_ptr<GameObject> &go : gameobjects) {
+        std::shared_ptr<Model> model = go->get_component<Model>();
+        if (model == nullptr) continue;
+
+        std::shared_ptr<Transform> transform = go->get_component<Transform>();
+        if (transform == nullptr) continue;
+
+        shader->set_mat4f("model", transform->get_model_matrix());
+        shader->set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
+        shader->set_float("material.shininess", 1.0f);
+        shader->set_bool("enable_custom_spec", Globals::enable_custom_lighting);
+        shader->set_bool("enable_blinn", Globals::enable_blinn);
+        model->draw(shader.get());
+    }
+}
+
+void Scene::render_lightobjects(){
+    glm::mat4 view_matrix = active_camera->get_view_matrix();
+    glm::mat4 projection_matrix = active_camera->get_projection_matrix();
     light_shader->use();
     light_shader->set_mat4f("view", view_matrix);
     light_shader->set_mat4f("projection", projection_matrix);
@@ -94,30 +115,17 @@ void Scene::draw() {
         model->draw(light_shader.get());
     }
 
+}
+void Scene::apply_lights(){
     shader->use();
     for (std::shared_ptr<LightObject> &lo : lightobjects) {
         lo->apply(shader);
     }
-    glm::vec3 view_pos = active_camera->get_pos();
-    view_pos = glm::normalize(glm::vec3(view_matrix * glm::vec4(view_pos, 0.)));
-    shader->set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
-    shader->set_mat4f("view", view_matrix);
-    shader->set_mat4f("projection", projection_matrix);
-    for (std::shared_ptr<GameObject> &go : gameobjects) {
-        std::shared_ptr<Model> model = go->get_component<Model>();
-        if (model == nullptr) continue;
+}
 
-        std::shared_ptr<Transform> transform = go->get_component<Transform>();
-        if (transform == nullptr) continue;
-
-        shader->set_mat4f("model", transform->get_model_matrix());
-        shader->set_vec3f("material.specular", 0.5f, 0.5f, 0.5f);
-        shader->set_float("material.shininess", 1.0f);
-        shader->set_bool("enable_custom_spec", Globals::enable_custom_lighting);
-        shader->set_bool("enable_blinn", Globals::enable_blinn);
-        model->draw(shader.get());
-    }
-
+void Scene::render_cubemap(){
+    glm::mat4 view_matrix = active_camera->get_view_matrix();
+    glm::mat4 projection_matrix = active_camera->get_projection_matrix();
     glDepthFunc(GL_LEQUAL);
     skybox_shader->use();
     glm::mat4 no_trans_view_matrix = glm::mat4(
@@ -125,12 +133,11 @@ void Scene::draw() {
     skybox_shader->set_mat4f("view", no_trans_view_matrix);
     skybox_shader->set_mat4f("projection", projection_matrix);
 
-    glBindVertexArray(current_cubemap->get_vao());
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, current_cubemap->get_id());
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);
-    glDepthFunc(GL_LESS);
+    current_cubemap->draw();
+}
+
+void Scene::render_debug()
+{
 
     Physics::the()->get_debug_drawer()->set_shader(debug_shader);
     Physics::the()->get_debug_drawer()->set_view(active_camera->get_view_matrix());
@@ -140,6 +147,18 @@ void Scene::draw() {
     Physics::the()->get_debug_drawer()->drawAll();
 }
 
-void Scene::set_current_cubemap(CubeMap &cm) {
-    current_cubemap = std::shared_ptr<CubeMap>(&cm);
+void Scene::render_scene() {
+    render_lightobjects();
+
+    apply_lights();
+
+    render_gameobjects();
+
+    render_cubemap();
+
+    render_debug();
+}
+
+void Scene::set_current_cubemap(std::shared_ptr<CubeMap> cm) {
+    current_cubemap = cm;
 }
