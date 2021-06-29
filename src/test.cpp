@@ -59,7 +59,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 }
 
 int main() {
-    Renderer renderer(800, 800, "Test");
+    Renderer renderer(1600, 900, "Test");
 
     renderer.init();
 
@@ -162,26 +162,26 @@ int main() {
                 glfwSetWindowShouldClose(renderer.window, true);
 
             if (glfwGetKey(renderer.window, GLFW_KEY_W) == GLFW_PRESS)
-                camera.set_pos(camera.get_pos() +
+                camera->set_pos(camera->get_pos() +
                                (camera_front * deltaTime * 5.0f));
             if (glfwGetKey(renderer.window, GLFW_KEY_S) == GLFW_PRESS)
-                camera.set_pos(camera.get_pos() -
+                camera->set_pos(camera->get_pos() -
                                (camera_front * deltaTime * 5.0f));
             if (glfwGetKey(renderer.window, GLFW_KEY_D) == GLFW_PRESS)
-                camera.set_pos(
-                    camera.get_pos() +
-                    glm::normalize(glm::cross(camera_front, camera.get_up())) *
+                camera->set_pos(
+                    camera->get_pos() +
+                    glm::normalize(glm::cross(camera_front, camera->get_up())) *
                         deltaTime * 3.0f);
             if (glfwGetKey(renderer.window, GLFW_KEY_A) == GLFW_PRESS)
-                camera.set_pos(
-                    camera.get_pos() -
-                    glm::normalize(glm::cross(camera_front, camera.get_up())) *
+                camera->set_pos(
+                    camera->get_pos() -
+                    glm::normalize(glm::cross(camera_front, camera->get_up())) *
                         deltaTime * 3.0f);
             if (glfwGetKey(renderer.window, GLFW_KEY_E) == GLFW_PRESS)
-                camera.set_pos(camera.get_pos() +
+                camera->set_pos(camera->get_pos() +
                                glm::vec3(0.0, 1.f * deltaTime * 5, 0.0));
             if (glfwGetKey(renderer.window, GLFW_KEY_C) == GLFW_PRESS)
-                camera.set_pos(camera.get_pos() +
+                camera->set_pos(camera->get_pos() +
                                glm::vec3(0.0, -1.f * deltaTime * 5, 0.0));
             if (glfwGetKey(renderer.window, GLFW_KEY_X) == GLFW_PRESS)
                 Globals::mouse_control = !Globals::mouse_control;
