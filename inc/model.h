@@ -46,6 +46,7 @@ class Model : public Component {
     std::vector<Texture> texture_cache;
 
    public:
+    Model(std::string path);
     std::vector<Mesh> get_meshes() { return meshes; }
     void load_model(std::string path);
     void process_node(aiNode *node, const aiScene *scene);

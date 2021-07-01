@@ -83,6 +83,11 @@ void Model::draw(Shader *shader) {
     }
 }
 
+Model::Model(std::string path)
+{
+    load_model(path);
+}
+
 void Model::load_model(std::string path) {
     Assimp::Importer importer;
     const aiScene *scene =
