@@ -12,11 +12,14 @@
 #include <glm/mat4x4.hpp>
 
 class App{
+protected:
     std::shared_ptr<Renderer> renderer;
     std::shared_ptr<Scene> scene;
     bool running = true;
 
 public:
-    App();
-    void run();
+    App(int width, int height, std::string title);
+    bool run();
+
+    virtual void scene_setup();
 };
