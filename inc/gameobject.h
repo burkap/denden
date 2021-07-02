@@ -18,7 +18,7 @@ class GameObject {
     GameObject();
     GameObject(std::string val);
     template <typename T>
-    void add_component(T* t = new T());
+    std::shared_ptr<T> add_component(T* t = new T());
     template <typename T>
     void add_component(T &a);
     template <typename T>

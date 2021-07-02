@@ -15,7 +15,7 @@
     COMPONENT_TYPE(LambdaScript)               \
     COMPONENT_TYPE(Camera)                     \
 
-#define ADD_COMPONENT(x) template void GameObject::add_component<x>(x* a);
+#define ADD_COMPONENT(x) template std::shared_ptr<x> GameObject::add_component<x>(x* a);
 #define ADD_COMPONENT_A(x) template void GameObject::add_component<x>(x & a);
 
 #define GET_COMPONENT(x) \
@@ -27,10 +27,12 @@ GameObject::GameObject() { id = count++; }
 GameObject::GameObject(std::string val) : GameObject() { name = val; }
 
 template <typename T>
-void GameObject::add_component(T* t /* = new T() */) {
-    components[typeid(T)] = std::shared_ptr<T>(t);
+std::shared_ptr<T> GameObject::add_component(T* t /* = new T() */) {
+    std::shared_ptr<T> new_component = std::shared_ptr<T>(t);
+    components[typeid(T)] = new_component;
     components[typeid(T)]->set_parent(this);
     t->start();
+    return new_component;
 }
 
 FOREACH_COMPONENT_TYPE(ADD_COMPONENT)
