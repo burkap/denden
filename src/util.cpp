@@ -21,3 +21,12 @@ bool is_number(std::string str){
     }
     return true;
 }
+
+btVector3 glm_to_bt_vec3(glm::vec3 v){
+    return btVector3(v.x, v.y, v.z);
+}
+
+btQuaternion glm_to_bt_quat(glm::quat q)
+{
+    return btQuaternion(q.x, q.y, q.z, q.w); // glmquat WXYZ -> btquat XYZW
+}

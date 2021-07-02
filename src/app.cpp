@@ -39,8 +39,8 @@ bool App::run(){
          * updateCamera(event);
          */
         renderer->fill(0.3f, 0.3f, 0.2f);
-        scene->step(deltaTime);
         scene->update_all(deltaTime);
+        scene->step(deltaTime);
         scene->render_scene();
 
         glfwPollEvents();
@@ -98,14 +98,14 @@ bool App::run(){
                                     std::dynamic_pointer_cast<Transform>(
                                         c.second);
                                 glm::vec3 tf_pos = tf->get_position();
-                                glm::vec3 tf_rot = tf->get_rotation();
+                                glm::vec3 tf_rot = tf->get_euler_rotation();
                                 glm::vec3 tf_scale = tf->get_scale();
                                 ImGui::SliderFloat3(
                                     "Pos", glm::value_ptr(tf_pos), -1, 1);
                                 tf->set_position(tf_pos);
                                 ImGui::SliderFloat3(
                                     "Rot", glm::value_ptr(tf_rot), -10, 10);
-                                tf->set_rotation(tf_rot);
+                                tf->set_euler_rotation(tf_rot);
                                 ImGui::SliderFloat3(
                                     "Scale", glm::value_ptr(tf_scale), 0, 1);
                                 tf->set_scale(tf_scale);
@@ -142,14 +142,14 @@ bool App::run(){
                                     std::dynamic_pointer_cast<Transform>(
                                         c.second);
                                 glm::vec3 tf_pos = tf->get_position();
-                                glm::vec3 tf_rot = tf->get_rotation();
+                                glm::vec3 tf_rot = tf->get_euler_rotation();
                                 glm::vec3 tf_scale = tf->get_scale();
                                 ImGui::SliderFloat3(
                                     "Pos", glm::value_ptr(tf_pos), -1, 1);
                                 tf->set_position(tf_pos);
                                 ImGui::SliderFloat3(
                                     "Rot", glm::value_ptr(tf_rot), -1, 1);
-                                tf->set_rotation(tf_rot);
+                                tf->set_euler_rotation(tf_rot);
                                 ImGui::SliderFloat3(
                                     "Scale", glm::value_ptr(tf_scale), 0, 1);
                                 tf->set_scale(tf_scale);

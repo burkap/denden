@@ -58,7 +58,7 @@ void Scene::step(float t) {
 
             std::shared_ptr<Transform> g_t = g->get_component<Transform>();
             g_t->set_position(glm::vec3(pos.getX(), pos.getY(), pos.getZ()));
-            if (Globals::rotate_collision) g_t->m_quaternion = q;
+            if (Globals::rotate_collision) g_t->set_quaternion(q);
         }
     }
 }

@@ -19,6 +19,7 @@ class RigidBody : public Component {
     btRigidBody* create_rigidbody();
     btRigidBody* get_rigidbody();
     void set_parent(GameObject* ptr) override;
+    void update(float dt) override;
 };
 
 #endif  // RIGIDBODY_H

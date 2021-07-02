@@ -2,6 +2,7 @@
 #include <rigidbody.h>
 #include <transform.h>
 #include <physics.h>
+#include <util.h>
 
 RigidBody::RigidBody(){
 }
@@ -15,12 +16,12 @@ void RigidBody::set_mass(double m) {
 btRigidBody* RigidBody::create_rigidbody() {
     // TO-DO: This should only be called IF the object has both Transform and
     // Collider components
+    transform = parent->get_component<Transform>();
     btTransform t;
     t.setIdentity();
     btVector3 initial_inertia(0, 0, 0);
-    std::shared_ptr<Transform> tt = parent->get_component<Transform>();
-    glm::vec3 pos = tt->get_position();
-    t.setOrigin(btVector3(pos.x, pos.y, pos.z));
+    t.setOrigin(glm_to_bt_vec3(transform->get_position()));
+    t.setRotation(glm_to_bt_quat(transform->get_quaternion()));
     btCollisionShape* plane =
         parent->get_component<Collider>()->get_collision_shape();
 
@@ -40,3 +41,13 @@ btRigidBody* RigidBody::get_rigidbody() { return m_rigidbody; }
 void RigidBody::set_parent(GameObject* ptr) { parent = ptr;
                                               create_rigidbody();
                                             }
+
+void RigidBody::update(float dt)
+{
+    btTransform to_set;
+    to_set.setIdentity();
+    to_set.setOrigin(glm_to_bt_vec3(transform->get_position()));
+    to_set.setRotation(glm_to_bt_quat(transform->get_quaternion()));
+    m_rigidbody->setWorldTransform(to_set);
+    m_rigidbody->getMotionState()->setWorldTransform(to_set);
+}
