@@ -2,7 +2,7 @@
 #include <app.h>
 #include <model.h>
 #include <transform.h>
-#include <collisionshape.h>
+#include <collider.h>
 
 #include <input.h>
 #include <rigidbody.h>

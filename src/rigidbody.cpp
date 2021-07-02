@@ -14,7 +14,7 @@ void RigidBody::set_mass(double m) {
 }
 btRigidBody* RigidBody::create_rigidbody() {
     // TO-DO: This should only be called IF the object has both Transform and
-    // CollisionShape components
+    // Collider components
     btTransform t;
     t.setIdentity();
     btVector3 initial_inertia(0, 0, 0);
@@ -22,7 +22,7 @@ btRigidBody* RigidBody::create_rigidbody() {
     glm::vec3 pos = tt->get_position();
     t.setOrigin(btVector3(pos.x, pos.y, pos.z));
     btCollisionShape* plane =
-        parent->get_component<CollisionShape>()->get_collision_shape();
+        parent->get_component<Collider>()->get_collision_shape();
 
     btMotionState* motion = new btDefaultMotionState();
     motion->setWorldTransform(t);

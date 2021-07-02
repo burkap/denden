@@ -36,7 +36,7 @@ class ExampleGame : public App{
         teapot_object->add_component<Model>(teapot_model);
         teapot_object->get_component<Transform>()->set_position(
             glm::vec3(0.0, 5, 0.0));
-        teapot_object->add_component<CollisionShape>(new MeshShape(*teapot_model));
+        teapot_object->add_component<Collider>(new MeshCollider(*cube_model));
         teapot_object->add_component<RigidBody>(new RigidBody(0.1));
 
         std::shared_ptr<GameObject> teapot_object2 =
@@ -44,7 +44,7 @@ class ExampleGame : public App{
         teapot_object2->add_component<Model>(teapot_model);
         teapot_object2->get_component<Transform>()->set_position(
             glm::vec3(1.3, 9, 0.0));
-        teapot_object2->add_component<CollisionShape>(new BoxShape(1, 1, 1));
+        teapot_object2->add_component<Collider>(new BoxCollider(1, 1, 1));
         teapot_object2->add_component<RigidBody>(new RigidBody(0.1));
 
         for (int i = 0; i < 5; i++) {
@@ -53,7 +53,7 @@ class ExampleGame : public App{
             aa->add_component<Model>(teapot_model);
             aa->get_component<Transform>()->set_position(
                 glm::vec3(1.3 + i % 5, 9 + i, i % 5));
-            aa->add_component<CollisionShape>(new BoxShape(1, 1, 1));
+            aa->add_component<Collider>(new BoxCollider(1, 1, 1));
             aa->add_component<RigidBody>(new RigidBody(0.1));
         }
 
@@ -66,7 +66,7 @@ class ExampleGame : public App{
         scene_object->get_component<Transform>()->set_position(
             glm::vec3(0.0, -5, 0.0));
         scene_object->get_component<Transform>()->set_scale(glm::vec3(1));
-        scene_object->add_component<CollisionShape>(new MeshShape(*scene_model));
+        scene_object->add_component<Collider>(new MeshCollider(*scene_model));
         scene_object->add_component<RigidBody>();
 
         std::shared_ptr<PointLight> light_object =

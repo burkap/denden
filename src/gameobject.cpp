@@ -1,4 +1,4 @@
-#include <collisionshape.h>
+#include <collider.h>
 #include <gameobject.h>
 #include <model.h>
 #include <rigidbody.h>
@@ -11,7 +11,7 @@
     COMPONENT_TYPE(Transform)                  \
     COMPONENT_TYPE(Model)                      \
     COMPONENT_TYPE(RigidBody)                  \
-    COMPONENT_TYPE(CollisionShape)             \
+    COMPONENT_TYPE(Collider)                   \
     COMPONENT_TYPE(LambdaScript)               \
     COMPONENT_TYPE(Camera)                     \
 

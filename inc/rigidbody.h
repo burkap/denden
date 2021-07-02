@@ -1,7 +1,7 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 #include <bullet/btBulletDynamicsCommon.h>
-#include <collisionshape.h>
+#include <collider.h>
 #include <transform.h>
 
 class RigidBody : public Component {
@@ -10,7 +10,7 @@ class RigidBody : public Component {
     btRigidBody::btRigidBodyConstructionInfo* info;
     btRigidBody* m_rigidbody;
     std::shared_ptr<Transform> transform;
-    std::shared_ptr<CollisionShape> collision_shape;
+    std::shared_ptr<Collider> collision_shape;
 
    public:
     RigidBody();

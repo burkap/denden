@@ -4,40 +4,40 @@
 #include <bullet/BulletCollision/CollisionShapes/btCylinderShape.h>
 #include <bullet/BulletCollision/CollisionShapes/btSphereShape.h>
 #include <bullet/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
-#include <collisionshape.h>
+#include <collider.h>
 #include <model.h>
 
-CollisionShape::CollisionShape() {
+Collider::Collider() {
     collision_shape = new btBoxShape(btVector3(16, 0, 16));
 }
 
-BoxShape::BoxShape(float x, float y, float z){
+BoxCollider::BoxCollider(float x, float y, float z){
     collision_shape = new btBoxShape(btVector3(x, y, z));
 }
 
-SphereShape::SphereShape(float radius){
+SphereCollider::SphereCollider(float radius){
     collision_shape = new btSphereShape(radius);
 }
 
-CapsuleShape::CapsuleShape(float radius, float height){
+CapsuleCollider::CapsuleCollider(float radius, float height){
     collision_shape = new btCapsuleShape(radius, height);
 }
 
-CylinderShape::CylinderShape(float x, float y, float z){
+CylinderCollider::CylinderCollider(float x, float y, float z){
     collision_shape = new btCylinderShape(btVector3(x, y, z));
 }
 
-ConeShape::ConeShape(float radius, float height){
+ConeCollider::ConeCollider(float radius, float height){
     collision_shape = new btConeShape(radius, height);
 }
 
-MeshShape::MeshShape(Model model){
+MeshCollider::MeshCollider(Model model){
     collision_shape = create_mesh_shape(model);
 }
 
-CollisionShape::~CollisionShape() { delete collision_shape; }
+Collider::~Collider() { delete collision_shape; }
 
-btCollisionShape* CollisionShape::create_mesh_shape(Model& model){
+btCollisionShape* Collider::create_mesh_shape(Model& model){
     btTriangleMesh* trimesh = new btTriangleMesh();
     for (Mesh& m : model.get_meshes()){
         std::vector<Vertex> vertices = m.get_vertices();
@@ -52,10 +52,10 @@ btCollisionShape* CollisionShape::create_mesh_shape(Model& model){
     return new btBvhTriangleMeshShape(trimesh, true);
 }
 
-btCollisionShape* CollisionShape::get_collision_shape() {
+btCollisionShape* Collider::get_collision_shape() {
     return collision_shape;
 }
 
-void CollisionShape::set_collision_shape(btCollisionShape* cs) {
+void Collider::set_collision_shape(btCollisionShape* cs) {
     collision_shape = cs;
 }

@@ -1,5 +1,5 @@
-#ifndef COLLISIONSHAPE_H
-#define COLLISIONSHAPE_H
+#ifndef COLLIDER_H
+#define COLLIDER_H
 #include <bullet/btBulletCollisionCommon.h>
 #include <component.h>
 #include <model.h>
@@ -16,45 +16,45 @@
 
 enum class ShapeType { FOREACH_SHAPE_TYPE(GENERATE_ENUM) };
 
-class CollisionShape : public Component {
+class Collider : public Component {
    protected:
     btCollisionShape* collision_shape;
    public:
-    CollisionShape();
-    ~CollisionShape();
+    Collider();
+    ~Collider();
     btCollisionShape* create_mesh_shape(Model& model);
     btCollisionShape* get_collision_shape();
     void set_collision_shape(btCollisionShape* cs);
 };
 
-class BoxShape : public CollisionShape {
+class BoxCollider : public Collider {
 public:
-    BoxShape(float x, float y, float z);
+    BoxCollider(float x, float y, float z);
 };
 
-class SphereShape : public CollisionShape {
+class SphereCollider : public Collider {
 public:
-    SphereShape(float radius);
+    SphereCollider(float radius);
 };
 
-class CapsuleShape : public CollisionShape {
+class CapsuleCollider : public Collider {
 public:
-    CapsuleShape(float radius, float height);
+    CapsuleCollider(float radius, float height);
 };
 
-class CylinderShape : public CollisionShape {
+class CylinderCollider: public Collider {
 public:
-    CylinderShape(float x, float y, float z);
+    CylinderCollider(float x, float y, float z);
 };
 
-class ConeShape : public CollisionShape {
+class ConeCollider : public Collider {
 public:
-    ConeShape(float radius, float height);
+    ConeCollider(float radius, float height);
 };
 
-class MeshShape : public CollisionShape {
+class MeshCollider : public Collider {
 public:
-    MeshShape(Model model);
+    MeshCollider(Model model);
 };
 
-#endif  // COLLISIONSHAPE_H
+#endif  // COLLIDER_H
