@@ -51,3 +51,26 @@ void RigidBody::update(float dt)
     m_rigidbody->setWorldTransform(to_set);
     m_rigidbody->getMotionState()->setWorldTransform(to_set);
 }
+
+void RigidBody::freeze_rotation_x(bool b)
+{
+    m_freeze_rotation_x = b;
+    update_freeze_rotation();
+}
+
+void RigidBody::freeze_rotation_y(bool b)
+{
+    m_freeze_rotation_y = b;
+    update_freeze_rotation();
+}
+
+void RigidBody::freeze_rotation_z(bool b)
+{
+    m_freeze_rotation_z = b;
+    update_freeze_rotation();
+}
+
+void RigidBody::update_freeze_rotation()
+{
+    m_rigidbody->setAngularFactor(btVector3(!m_freeze_rotation_x, !m_freeze_rotation_y, !m_freeze_rotation_z));
+}
