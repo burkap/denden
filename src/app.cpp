@@ -29,6 +29,7 @@ bool App::run(){
     while(running){
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
         //update_inputs();
         //before_frame();
         /* v
