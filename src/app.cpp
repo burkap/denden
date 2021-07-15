@@ -30,6 +30,7 @@ bool App::run(){
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        Input::update_mouse_positions();
         //update_inputs();
         //before_frame();
         /* v
