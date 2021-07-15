@@ -74,3 +74,9 @@ void RigidBody::update_freeze_rotation()
 {
     m_rigidbody->setAngularFactor(btVector3(!m_freeze_rotation_x, !m_freeze_rotation_y, !m_freeze_rotation_z));
 }
+
+void RigidBody::add_force(glm::vec3 f)
+{
+    m_rigidbody->activate(true);
+    m_rigidbody->applyCentralForce(glm_to_bt_vec3(f));
+}

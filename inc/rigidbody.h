@@ -25,6 +25,7 @@ class RigidBody : public Component {
     void freeze_rotation_y(bool b);
     void freeze_rotation_z(bool b);
     void update_freeze_rotation();
+    void add_force(glm::vec3 f);
 
     void set_parent(GameObject* ptr) override;
     void update(float dt) override;
