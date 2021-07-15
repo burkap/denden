@@ -2,6 +2,7 @@
 #include <app.h>
 #include <util.h>
 #include <components/lambdascript.h>
+#include <components/fps_example/playerlook.h>
 #include <input.h>
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos){}
@@ -33,7 +34,7 @@ class ExampleGame : public App{
         // Load models
         Model* cube_model = new Model(get_exe_path() + std::string("/env/p_cube.obj"));
 
-        Model* scene_model = new Model(get_exe_path() + std::string("/env/move_scene2.obj"));
+        Model* scene_model = new Model(get_exe_path() + std::string("/env/proto_scene.obj"));
 
         Model* light_model = new Model(get_exe_path() + std::string("/test/cube3.obj"));
 
@@ -42,6 +43,26 @@ class ExampleGame : public App{
         lambda->set_update_func([](LambdaScript* ref, float dt){
             if(Input::is_key_down(KEY_ENTER)) std::cout << "test\n";
         });
+
+        std::shared_ptr<GameObject> player = scene->create_gameobject("player");
+        player->add_component<Collider>(new CapsuleCollider(0.5, 2));
+        player->add_component<RigidBody>(new RigidBody(0.5));
+        player->get_component<RigidBody>()->freeze_rotation_x(true);
+        player->get_component<RigidBody>()->freeze_rotation_y(true);
+        player->get_component<RigidBody>()->freeze_rotation_z(true);
+        player->add_component<PlayerLook>(new PlayerLook(camera_object->get_component<Camera>()));
+        std::shared_ptr<LambdaScript> player_lambda = player->add_component<LambdaScript>(new LambdaScript());
+        player_lambda->set_update_func([&](LambdaScript *ref, float dt){
+            std::shared_ptr<Transform> t = ref->parent->get_component<Transform>();
+            std::shared_ptr<RigidBody> r = ref->parent->get_component<RigidBody>();
+            float speed = 5;
+            if(Input::is_key_down(KEY_W)) r->add_force(glm::vec3(0, 0, -1)*dt*speed*1000.0f);
+            if(Input::is_key_down(KEY_S)) r->add_force(glm::vec3(0, 0, 1)*dt*speed*1000.0f);
+            if(Input::is_key_down(KEY_A)) r->add_force(glm::vec3(-1, 0, 0)*dt*speed*1000.0f);
+            if(Input::is_key_down(KEY_D)) r->add_force(glm::vec3(1, 0, 0)*dt*speed*1000.0f);
+            scene->active_camera->set_pos(t->get_position());
+        });
+
 
         std::shared_ptr<GameObject> teapot_object =
             scene->create_gameobject("teapot");
@@ -60,9 +81,9 @@ class ExampleGame : public App{
         teapot_object2->add_component<RigidBody>(new RigidBody(0.1));
 
         int cubeno = 0;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                for (int k = 0; k < 5; k++) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
                     std::shared_ptr<GameObject> aa =
                         scene->create_gameobject("cube_" + std::to_string(cubeno++));
                     aa->add_component<Model>(cube_model);
@@ -82,7 +103,7 @@ class ExampleGame : public App{
         scene_object->add_component<Model>(scene_model);
         scene_object->get_component<Transform>()->set_position(
             glm::vec3(0.0, -5, 0.0));
-        scene_object->get_component<Transform>()->set_euler_rotation(glm::vec3(10, 0, 0));
+        //scene_object->get_component<Transform>()->set_euler_rotation(glm::vec3(10, 0, 0));
         scene_object->get_component<Transform>()->set_scale(glm::vec3(1));
         scene_object->add_component<Collider>(new MeshCollider(*scene_model));
         scene_object->add_component<RigidBody>();
