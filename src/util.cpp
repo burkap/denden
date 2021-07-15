@@ -30,3 +30,11 @@ btQuaternion glm_to_bt_quat(glm::quat q)
 {
     return btQuaternion(q.x, q.y, q.z, q.w); // glmquat WXYZ -> btquat XYZW
 }
+
+glm::vec3 euler_to_direction_vec(double yaw, double pitch){
+    glm::vec3 vec;
+    vec.x = -sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    vec.y = sin(glm::radians(pitch));
+    vec.z = -cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    return glm::normalize(vec);
+}
