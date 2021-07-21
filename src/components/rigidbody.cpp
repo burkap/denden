@@ -1,6 +1,6 @@
 #include <bullet/BulletCollision/CollisionShapes/btStaticPlaneShape.h>
-#include <rigidbody.h>
-#include <transform.h>
+#include <components/rigidbody.h>
+#include <components/transform.h>
 #include <physics.h>
 #include <util.h>
 

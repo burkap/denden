@@ -1,8 +1,8 @@
 #include <globals.h>
-#include <model.h>
-#include <rigidbody.h>
+#include <components/model.h>
+#include <components/rigidbody.h>
+#include <components/transform.h>
 #include <scene.h>
-#include <transform.h>
 
 #include <shadermanager.h>
 #include <glm/gtc/quaternion.hpp>

@@ -1,8 +1,8 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 #include <bullet/btBulletCollisionCommon.h>
-#include <component.h>
-#include <model.h>
+#include <components/component.h>
+#include <components/model.h>
 
 #define FOREACH_SHAPE_TYPE(TYPE) \
     TYPE(Box)                    \

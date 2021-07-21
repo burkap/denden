@@ -1,7 +1,7 @@
 #pragma once
-#include <component.h>
-#include <transform.h>
-#include <camera.h>
+#include <components/component.h>
+#include <components/transform.h>
+#include <components/camera.h>
 
 class PlayerLook : public Component{
     public:

@@ -1,6 +1,6 @@
 #include <gameobject.h>
 #include <typeinfo>
-#include <componentlist.h>
+#include <components/componentlist.h>
 
 unsigned int GameObject::count = 0;
 

@@ -1,6 +1,6 @@
 #ifndef SCENE_H
 #define SCENE_H
-#include <camera.h>
+#include <components/camera.h>
 #include <cubemap.h>
 #include <debugdrawer.h>
 #include <gameobject.h>

@@ -1,6 +1,6 @@
-#include <rigidbody.h>
 #include <app.h>
 #include <util.h>
+#include <components/rigidbody.h>
 #include <components/lambdascript.h>
 #include <components/fps_example/playerlook.h>
 #include <input.h>

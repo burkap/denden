@@ -1,10 +1,10 @@
 #ifndef COMPONENTLIST_H
 #define COMPONENTLIST_H
-#include <collider.h>
-#include <model.h>
-#include <rigidbody.h>
-#include <transform.h>
-#include <camera.h>
+#include <components/collider.h>
+#include <components/model.h>
+#include <components/rigidbody.h>
+#include <components/transform.h>
+#include <components/camera.h>
 #include <components/lambdascript.h>
 #include <components/fps_example/playerlook.h>
 

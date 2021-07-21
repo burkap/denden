@@ -2,7 +2,7 @@
 #define MODEL_H
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-#include <component.h>
+#include <components/component.h>
 #include <shader.h>
 #include <texture.h>
 

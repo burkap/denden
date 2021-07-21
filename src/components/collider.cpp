@@ -4,8 +4,8 @@
 #include <bullet/BulletCollision/CollisionShapes/btCylinderShape.h>
 #include <bullet/BulletCollision/CollisionShapes/btSphereShape.h>
 #include <bullet/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
-#include <collider.h>
-#include <model.h>
+#include <components/collider.h>
+#include <components/model.h>
 
 Collider::Collider() {
     collision_shape = new btBoxShape(btVector3(16, 0, 16));

@@ -1,5 +1,5 @@
 #include <lightobject.h>
-#include <transform.h>
+#include <components/transform.h>
 
 int PointLight::count = 0;
 

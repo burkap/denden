@@ -1,11 +1,11 @@
 #pragma once
 #include <app.h>
-#include <model.h>
-#include <transform.h>
-#include <collider.h>
+#include <components/model.h>
+#include <components/transform.h>
+#include <components/collider.h>
+#include <components/rigidbody.h>
 
 #include <input.h>
-#include <rigidbody.h>
 #include <lightobject.h>
 #include <util.h>
 

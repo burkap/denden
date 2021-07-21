@@ -1,8 +1,8 @@
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 #include <bullet/btBulletDynamicsCommon.h>
-#include <collider.h>
-#include <transform.h>
+#include <components/collider.h>
+#include <components/transform.h>
 
 class RigidBody : public Component {
     btTransform tf;

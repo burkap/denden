@@ -1,4 +1,4 @@
-#include <camera.h>
+#include <components/camera.h>
 #include <util.h>
 
 Camera::Camera(glm::vec3 pos, glm::vec3 target, glm::vec3 up, float fov_angle,
