@@ -39,6 +39,28 @@ class Transform : public Component {
     glm::vec3 get_euler_rotation() { return m_euler_rot; }
     glm::vec3 get_scale() { return m_scale; }
     glm::quat get_quaternion() { return m_quaternion; }
+    glm::vec3 forward() {
+        glm::vec3 vec;
+        vec.x = 2 * (m_quaternion.x * m_quaternion.z + m_quaternion.w * m_quaternion.y);
+        vec.y = 2 * (m_quaternion.y * m_quaternion.z - m_quaternion.w * m_quaternion.x);
+        vec.z = 1 - (2 * (m_quaternion.x * m_quaternion.x + m_quaternion.y * m_quaternion.y));
+        return vec;
+    }
+
+    glm::vec3 up() {
+        glm::vec3 vec;
+        vec.x = 2 * (m_quaternion.x * m_quaternion.y - m_quaternion.w * m_quaternion.z);
+        vec.y = 1 - (2 * (m_quaternion.x * m_quaternion.x + m_quaternion.z * m_quaternion.z));
+        vec.z = 2 * (m_quaternion.y * m_quaternion.z + m_quaternion.w * m_quaternion.x);
+        return vec;
+    }
+    glm::vec3 left() {
+        glm::vec3 vec;
+        vec.x = 1 - (2 * (m_quaternion.y * m_quaternion.y + m_quaternion.z * m_quaternion.z));
+        vec.y = 2 * (m_quaternion.x * m_quaternion.y + m_quaternion.w * m_quaternion.z);
+        vec.z = 2 * (m_quaternion.x * m_quaternion.z - m_quaternion.w * m_quaternion.y);
+        return vec;
+    }
 
     void set_position(glm::vec3 val) { m_position = val; }
     void set_euler_rotation(glm::vec3 val) {
