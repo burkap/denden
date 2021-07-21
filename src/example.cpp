@@ -56,10 +56,10 @@ class ExampleGame : public App{
             std::shared_ptr<Transform> t = ref->parent->get_component<Transform>();
             std::shared_ptr<RigidBody> r = ref->parent->get_component<RigidBody>();
             float speed = 5;
-            if(Input::is_key_down(KEY_W)) r->add_force(glm::vec3(0, 0, -1)*dt*speed*1000.0f);
-            if(Input::is_key_down(KEY_S)) r->add_force(glm::vec3(0, 0, 1)*dt*speed*1000.0f);
-            if(Input::is_key_down(KEY_A)) r->add_force(glm::vec3(-1, 0, 0)*dt*speed*1000.0f);
-            if(Input::is_key_down(KEY_D)) r->add_force(glm::vec3(1, 0, 0)*dt*speed*1000.0f);
+            if(Input::is_key_down(KEY_W)) r->add_force(-t->forward()*dt*speed*1000.0f);
+            if(Input::is_key_down(KEY_S)) r->add_force(t->forward()*dt*speed*1000.0f);
+            if(Input::is_key_down(KEY_A)) r->add_force(-t->left()*dt*speed*1000.0f);
+            if(Input::is_key_down(KEY_D)) r->add_force(t->left()*dt*speed*1000.0f);
             scene->active_camera->set_pos(t->get_position());
         });
 
