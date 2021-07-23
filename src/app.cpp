@@ -1,4 +1,3 @@
-#pragma once
 #include <app.h>
 #include <components/model.h>
 #include <components/transform.h>
