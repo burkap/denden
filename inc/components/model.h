@@ -1,5 +1,4 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <components/component.h>
@@ -55,4 +54,3 @@ class Model : public Component {
     void set_meshes(std::vector<Mesh> new_meshes);
     void draw(Shader* shader);
 };
-#endif

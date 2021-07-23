@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <components/component.h>
@@ -34,5 +33,3 @@ class Camera : public Component{
 
     glm::mat4 get_projection_matrix();
 };
-
-#endif

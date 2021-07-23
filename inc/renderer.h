@@ -1,5 +1,4 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -20,4 +19,3 @@ class Renderer {
     void render();
 };
 
-#endif

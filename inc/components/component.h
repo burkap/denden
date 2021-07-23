@@ -1,5 +1,4 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 #include <gameobject.h>
 
 #include <iostream>
@@ -16,5 +15,3 @@ class Component {
     virtual void update(float dt) { /* do nothing */ }
     virtual void set_parent(GameObject* ptr);
 };
-
-#endif  // COMPONENT_H

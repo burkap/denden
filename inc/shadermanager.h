@@ -1,5 +1,4 @@
-#ifndef SHADERMANAGER_H
-#define SHADERMANAGER_H
+#pragma once
 #include <shader.h>
 #include <memory>
 
@@ -30,5 +29,3 @@ public:
     // not assignable
     void operator=(const ShaderManager &) = delete;
 };
-
-#endif // SHADERMANAGER_H

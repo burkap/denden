@@ -1,5 +1,4 @@
-#ifndef COMPONENTLIST_H
-#define COMPONENTLIST_H
+#pragma once
 #include <components/collider.h>
 #include <components/model.h>
 #include <components/rigidbody.h>
@@ -22,5 +21,3 @@
 
 #define GET_COMPONENT(x) \
     template std::shared_ptr<x> GameObject::get_component<x>();
-
-#endif // COMPONENTLIST_H

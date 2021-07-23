@@ -1,5 +1,4 @@
-﻿#ifndef LIGHTOBJECT_H
-#define LIGHTOBJECT_H
+﻿#pragma once
 #include <gameobject.h>
 
 #include <string>
@@ -75,4 +74,3 @@ class PointLight : public LightObject {
 
     void apply(std::shared_ptr<Shader> shader);
 };
-#endif

@@ -1,5 +1,4 @@
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 
 #include <libgen.h>        // dirname
 #include <linux/limits.h>  // PATH_MAX
@@ -17,5 +16,3 @@ bool is_number(std::string str);
 btVector3 glm_to_bt_vec3(glm::vec3 v);
 btQuaternion glm_to_bt_quat(glm::quat q);
 glm::vec3 euler_to_direction_vec(double yaw, double pitch);
-
-#endif

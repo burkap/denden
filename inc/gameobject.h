@@ -1,5 +1,4 @@
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
+#pragma once
 #include <components/component.h>
 #include <shader.h>
 
@@ -25,4 +24,3 @@ class GameObject {
     std::shared_ptr<T> get_component();
 };
 
-#endif

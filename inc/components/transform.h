@@ -1,5 +1,4 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
+#pragma once
 #include <components/component.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -73,5 +72,3 @@ class Transform : public Component {
     void on_change();
    private:
 };
-
-#endif

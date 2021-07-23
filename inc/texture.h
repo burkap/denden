@@ -1,5 +1,4 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <assimp/postprocess.h>
@@ -56,5 +55,3 @@ struct Texture {
         glBindTexture(GL_TEXTURE_2D, id);
     }
 };
-
-#endif

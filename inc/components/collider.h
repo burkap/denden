@@ -1,5 +1,4 @@
-#ifndef COLLIDER_H
-#define COLLIDER_H
+#pragma once
 #include <bullet/btBulletCollisionCommon.h>
 #include <components/component.h>
 #include <components/model.h>
@@ -56,5 +55,3 @@ class MeshCollider : public Collider {
 public:
     MeshCollider(Model model);
 };
-
-#endif  // COLLIDER_H

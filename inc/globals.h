@@ -1,5 +1,4 @@
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#pragma once
 namespace Globals {
 extern bool enable_custom_lighting;
 extern bool render_wireframe;
@@ -10,4 +9,3 @@ extern bool simulate_steps;
 extern bool debug_draw_AABB;
 extern bool debug_draw_wireframe;
 }  // namespace Globals
-#endif  // GLOBALS_H

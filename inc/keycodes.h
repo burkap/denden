@@ -1,5 +1,4 @@
-#ifndef KEYCODES_H
-#define KEYCODES_H
+#pragma once
 
 /*
  * These keycodes are simply GLFW keycodes but renamed for convenience.
@@ -139,4 +138,3 @@
 #define MOD_CAPS_LOCK       0x0010
 #define MOD_NUM_LOCK        0x0020
 
-#endif // KEYCODES_H

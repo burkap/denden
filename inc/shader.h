@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -27,5 +26,3 @@ struct Shader {
                    const GLfloat& v3, const GLfloat& v4);
     void set_mat4f(const char* name, const glm::mat4& v);
 };
-
-#endif

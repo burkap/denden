@@ -1,5 +1,4 @@
-#ifndef CONFIGPARSER_H
-#define CONFIGPARSER_H
+#pragma once
 #include <string>
 #include <map>
 #include <fstream>
@@ -47,4 +46,3 @@ public:
     }
 };
 
-#endif // CONFIGPARSER_H

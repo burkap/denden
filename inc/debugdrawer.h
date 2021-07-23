@@ -1,5 +1,4 @@
-#ifndef DEBUGDRAWER_H
-#define DEBUGDRAWER_H
+#pragma once
 #include <bullet/btBulletDynamicsCommon.h>
 #include <shader.h>
 
@@ -71,5 +70,3 @@ class DebugDrawer : public btIDebugDraw {
 
     void drawAll();
 };
-
-#endif  // DEBUGDRAWER_H

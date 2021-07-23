@@ -1,5 +1,4 @@
-#ifndef RIGIDBODY_H
-#define RIGIDBODY_H
+#pragma once
 #include <bullet/btBulletDynamicsCommon.h>
 #include <components/collider.h>
 #include <components/transform.h>
@@ -30,5 +29,3 @@ class RigidBody : public Component {
     void set_parent(GameObject* ptr) override;
     void update(float dt) override;
 };
-
-#endif  // RIGIDBODY_H

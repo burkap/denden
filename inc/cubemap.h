@@ -1,5 +1,4 @@
-#ifndef CUBEMAP_H
-#define CUBEMAP_H
+#pragma once
 #include <string>
 #include <vector>
 
@@ -14,4 +13,3 @@ class CubeMap {
     void draw();
 };
 
-#endif  // CUBEMAP_H

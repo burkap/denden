@@ -1,5 +1,4 @@
-#ifndef SCENE_H
-#define SCENE_H
+#pragma once
 #include <components/camera.h>
 #include <cubemap.h>
 #include <debugdrawer.h>
@@ -36,4 +35,3 @@ class Scene {
     void set_current_cubemap(std::shared_ptr<CubeMap> cm);
 };
 
-#endif  // SCENE_H

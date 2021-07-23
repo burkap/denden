@@ -1,5 +1,4 @@
-#ifndef PHYSICS_H
-#define PHYSICS_H
+#pragma once
 #include <bullet/btBulletDynamicsCommon.h>
 #include <debugdrawer.h>
 
@@ -26,5 +25,3 @@ class Physics {
     btDiscreteDynamicsWorld* get_world();
     DebugDrawer* get_debug_drawer() { return debug_drawer; }
 };
-
-#endif  // PHYSICS_H
