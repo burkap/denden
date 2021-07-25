@@ -17,6 +17,7 @@ class RigidBody : public Component {
    public:
     RigidBody();
     RigidBody(double mass);
+    ~RigidBody();
     void set_mass(double m);
     btRigidBody* create_rigidbody();
     btRigidBody* get_rigidbody();

@@ -10,6 +10,11 @@ RigidBody::RigidBody(){
 RigidBody::RigidBody(double mass) : mass(mass) {
 }
 
+RigidBody::~RigidBody()
+{
+    Physics::the()->remove_rigidbody(m_rigidbody);
+}
+
 void RigidBody::set_mass(double m) {
     mass = m;
 }
@@ -29,10 +34,10 @@ btRigidBody* RigidBody::create_rigidbody() {
     motion->setWorldTransform(t);
 
     plane->calculateLocalInertia(mass, initial_inertia);
-    info = new btRigidBody::btRigidBodyConstructionInfo(btScalar(mass), motion,
-                                                        plane, initial_inertia);
-    info->m_friction = 1.0f;
-    m_rigidbody = new btRigidBody(*info);
+
+    btRigidBody::btRigidBodyConstructionInfo info(btScalar(mass), motion, plane, initial_inertia);
+    info.m_friction = 1.0f;
+    m_rigidbody = new btRigidBody(info);
     Physics::the()->add_rigidbody(m_rigidbody);
     return m_rigidbody;
 }

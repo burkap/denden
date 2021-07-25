@@ -21,6 +21,7 @@ class Physics {
     void init();
     void step(float t);
     void add_rigidbody(btRigidBody* rb);
+    void remove_rigidbody(btRigidBody* rb);
     void draw();
     btDiscreteDynamicsWorld* get_world();
     DebugDrawer* get_debug_drawer() { return debug_drawer; }

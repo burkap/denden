@@ -1,5 +1,6 @@
 #include <physics.h>
 #include <globals.h>
+#include <algorithm>
 
 Physics* Physics::instance = nullptr;
 
@@ -47,6 +48,19 @@ void Physics::add_rigidbody(btRigidBody *rb) {
     world->addRigidBody(rb);
 }
 
+void Physics::remove_rigidbody(btRigidBody *rb)
+{
+    for(int i = 0; i < rbs.size(); i++){
+        if(rbs[i] == rb){
+            world->removeRigidBody(rb);
+            btMotionState* ms = rb->getMotionState();
+            delete rb;
+            delete ms;
+            rbs.erase(rbs.begin() + i);
+            break;
+        }
+    }
+}
 
 void Physics::step(float t) { world->stepSimulation(t); }
 
