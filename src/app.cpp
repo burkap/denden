@@ -86,9 +86,9 @@ bool App::run(){
             ImGui::Text("Scene");
             if (ImGui::CollapsingHeader("GameObjects")) {
                 ImGui::Indent();
-                for (std::shared_ptr<GameObject>& go : scene->gameobjects) {
+                for (const auto& [k, go] : scene->gameobjects) {
                     if (ImGui::TreeNode(
-                            (go->name + " ID: " + std::to_string(go->id))
+                            (go->name + " ID: " + std::to_string(go->id) + " Use: " + std::to_string(go.use_count()))
                                 .c_str())) {
                         int i = 0;
                         for (auto& c : go->components) {

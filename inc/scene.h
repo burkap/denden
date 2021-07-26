@@ -16,7 +16,7 @@ class Scene {
     std::shared_ptr<Shader> debug_shader = ShaderManager::the()->get_debug_shader();
 
     std::shared_ptr<CubeMap> current_cubemap;
-    std::vector<std::shared_ptr<GameObject>> gameobjects;
+    std::unordered_map<std::string, std::shared_ptr<GameObject>> gameobjects;
     std::vector<std::shared_ptr<LightObject>> lightobjects;
     std::shared_ptr<Camera> active_camera;
     Scene();
@@ -33,5 +33,8 @@ class Scene {
     void render_debug();
     void render_scene();
     void set_current_cubemap(std::shared_ptr<CubeMap> cm);
+
+    std::shared_ptr<GameObject> get_gameobject_from_name(std::string name);
+    void remove_gameobject(std::shared_ptr<GameObject> go);
 };
 

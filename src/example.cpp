@@ -32,16 +32,18 @@ class ExampleGame : public App{
 
 
         // Load models
-        Model* cube_model = new Model(get_exe_path() + std::string("/env/p_cube.obj"));
-
         Model* scene_model = new Model(get_exe_path() + std::string("/env/proto_scene.obj"));
 
         Model* light_model = new Model(get_exe_path() + std::string("/test/cube3.obj"));
 
         std::shared_ptr<GameObject> input_handler = scene->create_gameobject("input handler");
         std::shared_ptr<LambdaScript> lambda = input_handler->add_component<LambdaScript>(new LambdaScript());
-        lambda->set_update_func([](LambdaScript* ref, float dt){
-            if(Input::is_key_down(KEY_ENTER)) std::cout << "test\n";
+        lambda->set_update_func([&](LambdaScript* ref, float dt){
+            if(Input::is_key_down(KEY_ENTER)){
+                std::cout << "test\n";
+                auto hehe = scene->get_gameobject_from_name("cube_5");
+                if(hehe != nullptr) scene->remove_gameobject(hehe);
+            }
         });
 
         std::shared_ptr<GameObject> player = scene->create_gameobject("player");
@@ -66,7 +68,7 @@ class ExampleGame : public App{
 
         std::shared_ptr<GameObject> teapot_object =
             scene->create_gameobject("teapot");
-        teapot_object->add_component<Model>(cube_model);
+        teapot_object->add_component<Model>(new Model(get_exe_path() + std::string("/env/p_cube.obj")));
         teapot_object->get_component<Transform>()->set_position(
             glm::vec3(0.0, 5, 0.0));
         teapot_object->add_component<Collider>(new BoxCollider(1, 1, 1));
@@ -74,7 +76,7 @@ class ExampleGame : public App{
 
         std::shared_ptr<GameObject> teapot_object2 =
             scene->create_gameobject("teapot2");
-        teapot_object2->add_component<Model>(cube_model);
+        teapot_object2->add_component<Model>(new Model(get_exe_path() + std::string("/env/p_cube.obj")));
         teapot_object2->get_component<Transform>()->set_position(
             glm::vec3(1.3, 9, 0.0));
         teapot_object2->add_component<Collider>(new BoxCollider(1, 1, 1));
@@ -86,7 +88,7 @@ class ExampleGame : public App{
                 for (int k = 0; k < 2; k++) {
                     std::shared_ptr<GameObject> aa =
                         scene->create_gameobject("cube_" + std::to_string(cubeno++));
-                    aa->add_component<Model>(cube_model);
+                    aa->add_component<Model>(new Model(get_exe_path() + std::string("/env/p_cube.obj")));
                     aa->get_component<Transform>()->set_position(
                         glm::vec3(i*2, j*2, -5+k*2));
                     aa->add_component<Collider>(new BoxCollider(1, 1, 1));
@@ -95,8 +97,9 @@ class ExampleGame : public App{
             }
         }
 
+
         std::shared_ptr<GameObject> cube = scene->create_gameobject("cube");
-        cube->add_component<Model>(cube_model);
+        cube->add_component<Model>(new Model(get_exe_path() + std::string("/env/p_cube.obj")));
         cube->get_component<Transform>()->set_position(glm::vec3(1, 15, 0.0));
 
         std::shared_ptr<GameObject> scene_object = scene->create_gameobject("plane");

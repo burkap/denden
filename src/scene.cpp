@@ -11,9 +11,11 @@ Scene::Scene() {
 }
 
 std::shared_ptr<GameObject> Scene::create_gameobject(std::string name) {
+    if (gameobjects.find(name) != gameobjects.end()) return nullptr; // if a gameobject with the same name exists
+
     std::shared_ptr<GameObject> new_object = std::make_shared<GameObject>(name);
     new_object->add_component<Transform>();
-    gameobjects.push_back(new_object);
+    gameobjects[name] = new_object;
     return new_object;
 }
 
@@ -33,7 +35,7 @@ void Scene::set_active_camera(std::shared_ptr<Camera> camera) {
 }
 
 void Scene::update_all(float t){
-    for (std::shared_ptr<GameObject> &g : gameobjects){
+    for (const auto& [k, g] : gameobjects){
         for(auto &a : g->components){
             std::shared_ptr<Component> c = a.second;
             c->update(t);
@@ -45,8 +47,7 @@ void Scene::step(float t) {
     if (!Globals::simulate_steps) return;
     Physics::the()->step(t);
 
-    for (std::shared_ptr<GameObject> &g :
-         gameobjects) {  // loop through all gameobjects
+    for (const auto& [k, g] : gameobjects) {  // loop through all gameobjects
         std::shared_ptr<RigidBody> rb = g->get_component<RigidBody>();
         if (rb != nullptr)  // that have a RigidBody component
         {
@@ -72,7 +73,7 @@ void Scene::render_gameobjects(){
     shader->set_vec3f("viewPos", view_pos.x, view_pos.y, view_pos.z);
     shader->set_mat4f("view", view_matrix);
     shader->set_mat4f("projection", projection_matrix);
-    for (std::shared_ptr<GameObject> &go : gameobjects) {
+    for (const auto& [k, go] : gameobjects) {
         std::shared_ptr<Model> model = go->get_component<Model>();
         if (model == nullptr) continue;
 
@@ -161,4 +162,16 @@ void Scene::render_scene() {
 
 void Scene::set_current_cubemap(std::shared_ptr<CubeMap> cm) {
     current_cubemap = cm;
+}
+
+std::shared_ptr<GameObject> Scene::get_gameobject_from_name(std::string name)
+{
+    if (gameobjects.find(name) == gameobjects.end()) return nullptr;
+    return gameobjects[name];
+}
+
+void Scene::remove_gameobject(std::shared_ptr<GameObject> go)
+{
+    if (gameobjects.find(go->name) == gameobjects.end()) return;
+    gameobjects.erase(go->name);
 }
