@@ -99,8 +99,9 @@ class ExampleGame : public App{
 
 
         std::shared_ptr<GameObject> cube = scene->create_gameobject("cube");
-        cube->add_component<Model>(new Model(get_exe_path() + std::string("/env/p_cube.obj")));
-        cube->get_component<Transform>()->set_position(glm::vec3(1, 15, 0.0));
+        cube->add_component<Model>(new Model(get_exe_path() + std::string("/env/gun.obj")));
+        cube->get_component<Transform>()->set_position(glm::vec3(1, 2, 0.0));
+        cube->get_component<Transform>()->set_scale(glm::vec3(0.5, 0.5, 0.5));
 
         std::shared_ptr<GameObject> scene_object = scene->create_gameobject("plane");
         scene_object->add_component<Model>(scene_model);
