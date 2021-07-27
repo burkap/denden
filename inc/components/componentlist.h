@@ -5,6 +5,7 @@
 #include <components/transform.h>
 #include <components/camera.h>
 #include <components/lambdascript.h>
+#include <components/template.h>
 #include <components/fps_example/playerlook.h>
 
 #define FOREACH_COMPONENT_TYPE(COMPONENT_TYPE) \
@@ -14,6 +15,7 @@
     COMPONENT_TYPE(Collider)                   \
     COMPONENT_TYPE(LambdaScript)               \
     COMPONENT_TYPE(Camera)                     \
+    COMPONENT_TYPE(TemplateComponent)          \
     COMPONENT_TYPE(PlayerLook)                 \
 
 #define ADD_COMPONENT(x) template std::shared_ptr<x> GameObject::add_component<x>(x* a);
