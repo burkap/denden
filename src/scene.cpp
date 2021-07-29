@@ -6,6 +6,7 @@
 
 #include <shadermanager.h>
 #include <glm/gtc/quaternion.hpp>
+#include <clock.h>
 
 Scene::Scene() {
 }
@@ -34,18 +35,18 @@ void Scene::set_active_camera(std::shared_ptr<Camera> camera) {
     active_camera = camera;
 }
 
-void Scene::update_all(float t){
+void Scene::update_all(){
     for (const auto& [k, g] : gameobjects){
         for(auto &a : g->components){
             std::shared_ptr<Component> c = a.second;
-            c->update(t);
+            c->update();
         }
     }
 }
 
-void Scene::step(float t) {
+void Scene::step() {
     if (!Globals::simulate_steps) return;
-    Physics::the()->step(t);
+    Physics::the()->step(Clock::the()->dt());
 
     for (const auto& [k, g] : gameobjects) {  // loop through all gameobjects
         std::shared_ptr<RigidBody> rb = g->get_component<RigidBody>();

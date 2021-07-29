@@ -20,6 +20,6 @@ class PlayerLook : public Component{
         double y_rotation = 0;
 
         virtual void start();
-        virtual void update(float dt);
+        virtual void update();
 };
 

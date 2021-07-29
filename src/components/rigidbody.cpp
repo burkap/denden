@@ -47,7 +47,7 @@ void RigidBody::set_parent(GameObject* ptr) { parent = ptr;
                                               create_rigidbody();
                                             }
 
-void RigidBody::update(float dt)
+void RigidBody::update()
 {
     btTransform to_set;
     to_set.setIdentity();

@@ -24,8 +24,8 @@ class Scene {
     template <typename T>
     std::shared_ptr<T> create_lightobject(std::string);
     void set_active_camera(std::shared_ptr<Camera> camera);
-    void update_all(float t);
-    void step(float t);
+    void update_all();
+    void step();
     void render_gameobjects();
     void render_lightobjects();
     void apply_lights();

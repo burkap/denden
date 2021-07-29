@@ -1,13 +1,14 @@
 #include <components/fps_example/playerlook.h>
 #include <input.h>
 #include <util.h>
+#include <clock.h>
 
 void PlayerLook::start()
 {
     this->player_transform = parent->get_component<Transform>();
 }
 
-void PlayerLook::update(float dt){
+void PlayerLook::update(){
     mouse_x = Input::get_mouse_diff_x();
     mouse_y = Input::get_mouse_diff_y();
 

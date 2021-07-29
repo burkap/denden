@@ -7,6 +7,7 @@
 #include <input.h>
 #include <lightobject.h>
 #include <util.h>
+#include <clock.h>
 
 App::App(int width, int height, std::string title){
     /*
@@ -23,12 +24,9 @@ App::App(int width, int height, std::string title){
 
 bool App::run(){
     scene_setup();
-    float deltaTime = 0.0f;
-    float lastFrame = 0.0f;
+    Clock::the()->update();
     while(running){
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        Clock::the()->update();
         Input::update_mouse_positions();
         //update_inputs();
         //before_frame();
@@ -40,8 +38,8 @@ bool App::run(){
          * updateCamera(event);
          */
         renderer->fill(0.3f, 0.3f, 0.2f);
-        scene->update_all(deltaTime);
-        scene->step(deltaTime);
+        scene->update_all();
+        scene->step();
         scene->render_scene();
 
         glfwPollEvents();

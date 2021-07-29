@@ -28,5 +28,5 @@ class RigidBody : public Component {
     void add_force(glm::vec3 f);
 
     void set_parent(GameObject* ptr) override;
-    void update(float dt) override;
+    void update() override;
 };

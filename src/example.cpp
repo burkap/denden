@@ -4,6 +4,7 @@
 #include <components/lambdascript.h>
 #include <components/fps_example/playerlook.h>
 #include <input.h>
+#include <clock.h>
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos){}
 
@@ -38,7 +39,7 @@ class ExampleGame : public App{
 
         std::shared_ptr<GameObject> input_handler = scene->create_gameobject("input handler");
         std::shared_ptr<LambdaScript> lambda = input_handler->add_component<LambdaScript>(new LambdaScript());
-        lambda->set_update_func([&](LambdaScript* ref, float dt){
+        lambda->set_update_func([&](LambdaScript* ref){
             if(Input::is_key_down(KEY_ENTER)){
                 std::cout << "test\n";
                 auto hehe = scene->get_gameobject_from_name("cube_5");
@@ -54,7 +55,8 @@ class ExampleGame : public App{
         player->get_component<RigidBody>()->freeze_rotation_z(true);
         player->add_component<PlayerLook>(new PlayerLook(camera_object->get_component<Camera>()));
         std::shared_ptr<LambdaScript> player_lambda = player->add_component<LambdaScript>(new LambdaScript());
-        player_lambda->set_update_func([&](LambdaScript *ref, float dt){
+        player_lambda->set_update_func([&](LambdaScript *ref){
+            float dt = Clock::the()->dt();
             std::shared_ptr<Transform> t = ref->parent->get_component<Transform>();
             std::shared_ptr<RigidBody> r = ref->parent->get_component<RigidBody>();
             float speed = 5;
