@@ -68,7 +68,7 @@ bool App::run(){
                      ? btIDebugDraw::DBG_DrawWireframe
                      : 0));
 
-            ImGui::Text("Test text");
+            ImGui::Text(std::string("Delta time (ms): " + std::to_string(Clock::the()->dt()*1000)).c_str());
 
             if (ImGui::Button("Button")) counter++;
             ImGui::SameLine();
