@@ -14,7 +14,6 @@ class Physics {
     btDiscreteDynamicsWorld* world;
 
    public:
-    static Physics* the();
     std::vector<btRigidBody*> rbs;
     Physics();
     ~Physics();
@@ -25,4 +24,10 @@ class Physics {
     void draw();
     btDiscreteDynamicsWorld* get_world();
     DebugDrawer* get_debug_drawer() { return debug_drawer; }
+
+    static Physics* the();
+    // not cloneable
+    Physics(Physics &other) = delete;
+    // not assignable
+    void operator=(const Physics &) = delete;
 };
