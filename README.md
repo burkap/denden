@@ -18,7 +18,7 @@ Specular Lightning (footage from early development)            |
 Multiple light sources             |  Debug GUI
 :-------------------------:|:-------------------------:
 <img src="https://raw.githubusercontent.com/burkap/denden/main/media/early.png" width="400" height="400">  |  <img src="https://raw.githubusercontent.com/burkap/denden/main/media/unknown.png" width="400" height="400">
-Phong reflection            |  Wireframe
+Blinn-Phong reflection            |  Wireframe
 <img src="https://raw.githubusercontent.com/burkap/denden/main/media/phong.png" width="400" height="400">  |  <img src="https://raw.githubusercontent.com/burkap/denden/main/media/scene.png" width="400" height="400">
 
 ## Thirdparty
